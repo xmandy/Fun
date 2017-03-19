@@ -3,6 +3,14 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
+void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode)
+{
+    if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+    {
+        glfwSetWindowShouldClose(window, GL_TRUE);
+    }
+}
+
 int main(int argc, char **argv)
 {
     
@@ -26,13 +34,27 @@ int main(int argc, char **argv)
     
     glfwMakeContextCurrent(window);
     
+    glewExperimental = GL_TRUE;
+    if (glewInit() != GLEW_OK)
+    {
+        std::cout<<"failed to init glew"<<std::endl;
+        return -1;
+    }
+    
+    glfwSetKeyCallback(window, key_callback);
+    
+    int width,height;
+    glfwGetFramebufferSize(window, &width, &height);
+    glViewport(0, 0, width, height);
+    
+    
     std::cout << "OpenGL Vendor:" << glGetString(GL_VENDOR) << std::endl;
     std::cout << "OpenGL Renderer: " << glGetString(GL_RENDERER) << std::endl;
     std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
     std::cout << "GLSL Version:" << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
     
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     while (!glfwWindowShouldClose(window)) {
+        glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         glfwSwapBuffers(window);
         glfwPollEvents();
