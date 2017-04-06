@@ -33,4 +33,6 @@ message(STATUS "cxx Flags: " ${CMAKE_CXXFLAGS})
 # add project
 add_subdirectory(window)
 
+add_subdirectory(shader)
+
 
