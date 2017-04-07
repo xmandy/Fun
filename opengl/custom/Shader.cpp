@@ -32,5 +32,13 @@ Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
 
 	const GLchar* vShaderCode = vertexCode.c_str();
 	const GLchar* fShaderCode = fragmentCode.c_str();
-	
+
+	GLuint vertex, fragment;
+	GLint success;
+	GLchar infoLog[512];
+
+	vertex = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource
+
+
 }

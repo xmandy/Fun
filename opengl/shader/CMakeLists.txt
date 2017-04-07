@@ -13,6 +13,8 @@ elseif (MAC_OS_X)
     set(INK_DIR /usr/local/lib)
 endif()
 
+list(APPEND INC_DIR ../custom)
+
 include_directories(${INC_DIR})
 link_directories(${INK_DIR})
 
@@ -22,7 +24,7 @@ message(STATUS "link_directories: " ${OUT_VAR})
 
 set(EXTRA_LIBS ${EXTRA_LIBS} glew glfw3)
 
-set(SRC_LST main.cpp)
+set(SRC_LST main.cpp ../custom/Shader.cpp)
 add_executable(shader ${SRC_LST})
 
 if (MAC_OS_X)
