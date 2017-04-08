@@ -32,13 +32,49 @@ Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
 
 	const GLchar* vShaderCode = vertexCode.c_str();
 	const GLchar* fShaderCode = fragmentCode.c_str();
+    
+    std::cout << vShaderCode << std::endl;
+    std::cout << fShaderCode << std::endl;
 
 	GLuint vertex, fragment;
 	GLint success;
 	GLchar infoLog[512];
 
 	vertex = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource
+    glShaderSource(vertex, 1, &vShaderCode, NULL);
+    glCompileShader(vertex);
+    glGetShaderiv(vertex, GL_COMPILE_STATUS, &success);
+    if (!success)
+    {
+        glGetShaderInfoLog(vertex, 512, NULL, infoLog);
+        std::cout<< "ERROR++ compile vertex shader: " << infoLog << std::endl;
+    }
+    
+    fragment = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(fragment, 1, &fShaderCode, NULL);
+    glCompileShader(fragment);
+    glGetShaderiv(fragment, GL_COMPILE_STATUS, &success);
+    if (!success)
+    {
+        glGetShaderInfoLog(fragment, 512, NULL, infoLog);
+        std::cout << "ERROR.. compile fragment shader: " << infoLog << std::endl;
+    }
+    
+    Program = glCreateProgram();
+    glAttachShader(Program, vertex);
+    glAttachShader(Program, fragment);
+    glLinkProgram(Program);
+    glGetProgramiv(Program, GL_LINK_STATUS, &success);
+    if (!success)
+    {
+        glGetProgramInfoLog(Program, 512, NULL, infoLog);
+        std::cout << "ERROR--link program: " << infoLog << std::endl;
+    }
+    glDeleteShader(vertex);
+    glDeleteShader(fragment);
+}
 
-
+void Shader::Use()
+{
+    glUseProgram(Program);
 }
