@@ -4,6 +4,9 @@
 #include <iostream>
 #include "Shader.h"
 #include <SOIL.h>
+#include <string>
+#include "PlatformUtils.h"
+
 
 
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode)
@@ -22,15 +25,11 @@ int main(int argc, char **argv)
         std::cout << "glfw init failed!" << std::endl;
         return 0;
     }
-#ifdef MAC_OS_X
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-//    char texture_path1[512] = "/Users/yangxue/workspace/MyRoad/opengl/textures/container.jpg";
-//    char texture_path2[512] = "/Users/yangxue/workspace/MyRoad/opengl/textures/awesomeface.png";
-    char* texture_path[2] = {
-        "/Users/yangxue/workspace/MyRoad/opengl/textures/container.jpg",
-        "/Users/yangxue/workspace/MyRoad/opengl/textures/awesomeface.png"
+    char* texture_file[2] = {
+        "container.jpg",
+        "awesomeface.png"
     };
-#endif
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -62,15 +61,18 @@ int main(int argc, char **argv)
     glViewport(0, 0, width, height);
     
     // Use shader class
-    Shader outShader("/Users/yangxue/workspace/MyRoad/opengl/shaders/texture_learn.vs",
-                     "/Users/yangxue/workspace/MyRoad/opengl/shaders/texture_learn.ps");
+	std::string vs_path;
+	std::string ps_path;
+	common::GetShaderPath(vs_path, "texture_learn.vs");
+	common::GetShaderPath(ps_path, "texture_learn.ps");
+    Shader outShader(vs_path.c_str(), ps_path.c_str());
     
     // create texures
     int tWidth, tHeight;
     
     int texture_length = 2;
     
-    GLuint *textures = new GLuint(texture_length);
+    GLuint *textures = new GLuint[texture_length];
     glGenTextures(texture_length, textures);
 //    glBindTexture(GL_TEXTURE_2D, textures[0]);
 //    // set texture wrapping mode
@@ -97,8 +99,11 @@ int main(int argc, char **argv)
         // set texture filtering mode
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		std::string path;
+		common::GetTexturePath(path, texture_file[i]);
         
-        unsigned char *image = SOIL_load_image(texture_path[i], &tWidth, &tHeight, 0, SOIL_LOAD_RGB);
+        unsigned char *image = SOIL_load_image(path.c_str(), &tWidth, &tHeight, 0, SOIL_LOAD_RGB);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, tWidth, tHeight, 0, GL_RGB,
                      GL_UNSIGNED_BYTE, image);
         glGenerateMipmap(GL_TEXTURE_2D);

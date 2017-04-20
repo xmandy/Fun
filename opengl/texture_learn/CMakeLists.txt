@@ -6,15 +6,15 @@ cmake_policy(SET CMP0015 NEW)
 project(texture_learn)
 
 if (WIN32)
-    set(INC_DIR "G:/My Documents/3rdLibraries/Include")
-    set(INK_DIR "G:/My Documents/3rdLibraries/Libs")
+    set(INC_DIR "../3rdlibs/Base/Include")
+    set(INK_DIR "../3rdlibs/Base/Libs" ../3rdlibs/SOIL/lib)
     set(EXTRA_LIBS ${EXTRA_LIBS} opengl32)
 elseif (MAC_OS_X)
     set(INC_DIR /usr/local/include/)
     set(INK_DIR /usr/local/lib ../3rdlibs/SOIL/lib)
 endif()
 
-list(APPEND INC_DIR ../custom)
+list(APPEND INC_DIR ../custom ../common)
 list(APPEND INC_DIR ../3rdlibs/SOIL/src)
 
 
