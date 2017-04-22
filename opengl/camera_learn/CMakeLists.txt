@@ -3,7 +3,7 @@ cmake_policy(SET CMP0015 NEW)
 # see: https://cmake.org/cmake/help/v3.0/policy/CMP0015.html
 
 # project
-project(texture_learn)
+project(camera_learn)
 
 if (WIN32)
     set(INC_DIR "../3rdlibs/Base/Include")
@@ -31,7 +31,7 @@ set(SRC_LST
 		main.cpp
 		../custom/Shader.cpp
 		)
-add_executable(texture_learn ${SRC_LST})
+add_executable(camera_learn ${SRC_LST})
 
 if (MAC_OS_X)
     set(APPLE_FM "Cocoa" "CoreVideo" "IOKit" "OpenGL")
@@ -52,5 +52,5 @@ endif()
 # show extra libs
 message(STATUS "ExtraLibs: " ${EXTRA_LIBS})
 
-target_link_libraries(texture_learn ${EXTRA_LIBS})
+target_link_libraries(camera_learn ${EXTRA_LIBS})
 

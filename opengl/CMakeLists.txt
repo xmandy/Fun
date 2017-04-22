@@ -37,4 +37,6 @@ add_subdirectory(shader)
 
 add_subdirectory(texture_learn)
 
+add_subdirectory(camera_learn)
+
 
