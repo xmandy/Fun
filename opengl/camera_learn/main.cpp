@@ -171,6 +171,20 @@ int main(int argc, char **argv)
         -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
         -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
     };
+
+	glm::vec3 cubePositions[] = {
+		glm::vec3(0.0f, 0.0f, 0.0f),
+		glm::vec3(2.0f, 5.0f, -15.0f),
+		glm::vec3(-1.5f, -2.2f, -2.5f),
+		glm::vec3(-3.8f, -2.0f, -12.3f),
+		glm::vec3(2.4f, -0.4f, -3.5f),
+		glm::vec3(-1.7f, 3.0f, -7.5f),
+		glm::vec3(1.3f, -2.0f, -2.5f),
+		glm::vec3(1.5f, 2.0f, -2.5f),
+		glm::vec3(1.5f, 0.2f, -1.5f),
+		glm::vec3(-1.3f, 1.0f, -1.5f)
+	};
+
     GLuint VBO, VAO, EBO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -233,21 +247,26 @@ int main(int argc, char **argv)
         
         outShader.Use();
         
-        GLint modelLoc = glGetUniformLocation(outShader.Program, "model");
-        glm::mat4 model;
-        model = glm::rotate(model, (GLfloat)glfwGetTime()*0.5f, glm::vec3(0.5f, 1.0f, 1.0f));
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-        
-        GLint viewLoc = glGetUniformLocation(outShader.Program, "view");
-        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-                           
-        GLint projectLoc = glGetUniformLocation(outShader.Program, "projection");
-        glUniformMatrix4fv(projectLoc, 1, GL_FALSE, glm::value_ptr(projection));
-                           
-        glBindVertexArray(VAO);
-        
-//        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+		GLint modelLoc = glGetUniformLocation(outShader.Program, "model");
+		GLint viewLoc = glGetUniformLocation(outShader.Program, "view");
+		GLint projectLoc = glGetUniformLocation(outShader.Program, "projection");
+
+		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+		glUniformMatrix4fv(projectLoc, 1, GL_FALSE, glm::value_ptr(projection));
+		
+		for (int i = 0; i < sizeof(cubePositions) / sizeof(cubePositions[0]); ++i)
+		{ 
+			//std::cout << "this length" << sizeof(cubePositions) / sizeof(cubePositions[0]) << std::endl;
+			glm::mat4 model;
+			model = glm::translate(model, cubePositions[i]);
+			model = glm::rotate(model, (GLfloat)glfwGetTime()*0.5f, glm::vec3(0.5f, 1.0f, 1.0f));
+			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+
+			glBindVertexArray(VAO);
+			
+	//        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+			}
         glBindVertexArray(0);
         
         

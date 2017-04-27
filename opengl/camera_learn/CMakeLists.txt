@@ -30,6 +30,7 @@ set(EXTRA_LIBS ${EXTRA_LIBS} glew glfw3 SOIL)
 set(SRC_LST
 		main.cpp
 		../custom/Shader.cpp
+        ../custom/Camera.cpp
 		)
 add_executable(camera_learn ${SRC_LST})
 
