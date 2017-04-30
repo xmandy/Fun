@@ -13,6 +13,18 @@
 int ScreenWidth = 640;
 int ScreenHeight = 480;
 
+GLfloat yaw = 180.0f;
+GLfloat pitch = 0.0f;
+
+glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+
+GLfloat deltaTime = 0.0f;
+GLfloat lastFrame = 0.0f;
+
+GLfloat lastX = ScreenWidth / 2.0;
+GLfloat lastY = ScreenHeight / 2.0;
 
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode)
 {
@@ -21,6 +33,42 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
         glfwSetWindowShouldClose(window, GL_TRUE);
     }
 }
+
+bool firstMouse = true;
+
+void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+{
+    if (firstMouse)
+    {
+        lastX = xpos;
+        lastY = ypos;
+        firstMouse = false;
+    }
+    GLfloat xoffset = xpos - lastX;
+    GLfloat yoffset = ypos - lastY;
+    lastX = xpos;
+    lastY = ypos;
+    
+    GLfloat sensitivity = 0.05;	// Change this value to your liking
+    xoffset *= sensitivity;
+    yoffset *= sensitivity;
+    
+    yaw   += xoffset;
+    pitch += yoffset;
+    // Make sure that when pitch is out of bounds, screen doesn't get flipped
+    if (pitch > 89.0f)
+        pitch = 89.0f;
+    if (pitch < -89.0f)
+        pitch = -89.0f;
+    
+    glm::vec3 front;
+    
+    front.x = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+    front.y = sin(glm::radians(pitch));
+    front.z = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    cameraFront = glm::normalize(front);
+}
+
 
 int main(int argc, char **argv)
 {
@@ -60,6 +108,8 @@ int main(int argc, char **argv)
     std::cout << "GLSL Version:" << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
     
     glfwSetKeyCallback(window, key_callback);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetCursorPosCallback(window, mouse_callback);
     
     int width,height;
     glfwGetFramebufferSize(window, &width, &height);
@@ -250,6 +300,8 @@ int main(int argc, char **argv)
 		GLint modelLoc = glGetUniformLocation(outShader.Program, "model");
 		GLint viewLoc = glGetUniformLocation(outShader.Program, "view");
 		GLint projectLoc = glGetUniformLocation(outShader.Program, "projection");
+        glm::mat4 view;
+        view = glm::lookAt(cameraPos, cameraPos+cameraFront, cameraUp);
 
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 		glUniformMatrix4fv(projectLoc, 1, GL_FALSE, glm::value_ptr(projection));
