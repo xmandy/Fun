@@ -143,7 +143,7 @@ int main(int argc, char **argv)
 	std::string vs_path;
 	std::string ps_path;
 	common::GetShaderPath(vs_path, "3d.vs");
-	common::GetShaderPath(ps_path, "texture_learn.ps");
+	common::GetShaderPath(ps_path, "simple_color.ps");
     Shader outShader(vs_path.c_str(), ps_path.c_str());
     
     // create texures
@@ -291,19 +291,22 @@ int main(int argc, char **argv)
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     
     glBindVertexArray(0);
-    // Unbind VAO (it's always a good thing to unbind any buffer/array to prevent strange bugs), remember: do NOT unbind the EBO, keep it bound to this VAO
-    
-/*    glm::mat4 model;
-    model = glm::rotate(model, glm::radians(55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-    
-    glm::mat4 view;
-    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-    
-    glm::mat4 projection;
-    projection = glm::perspective(glm::radians(45.0f), (GLfloat)ScreenWidth / (GLfloat)ScreenHeight, 0.1f, 100.0f);
- */   
 
-	std::cout << "111" << camera.Front.x << " " << camera.Front.y << " " << camera.Front.z << std::endl;
+    GLuint lightVAO;
+    glGenVertexArrays(1, &lightVAO);
+    glBindVertexArray(lightVAO);
+    // We only need to bind to the VBO, the container's VBO's data already contains the correct data.
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    // Set the vertex attributes (only position data for our lamp)
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
+    glEnableVertexAttribArray(0);
+    glBindVertexArray(0);
+    
+    std::string v_path;
+    std::string p_path;
+    common::GetShaderPath(v_path, "lamp.vs");
+    common::GetShaderPath(p_path, "lamp.ps");
+    Shader lamp_shader(v_path.c_str(), p_path.c_str());
 
 
     glEnable(GL_DEPTH_TEST);
@@ -320,14 +323,15 @@ int main(int argc, char **argv)
         
         // bind textures
         
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, textures[0]);
-        glUniform1i(glGetUniformLocation(outShader.Program,"texture0"), 0);
-        
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, textures[1]);
-        glUniform1i(glGetUniformLocation(outShader.Program,"texture1"), 1);
-        
+        // do not need textures
+//        glActiveTexture(GL_TEXTURE0);
+//        glBindTexture(GL_TEXTURE_2D, textures[0]);
+//        glUniform1i(glGetUniformLocation(outShader.Program,"texture0"), 0);
+//        
+//        glActiveTexture(GL_TEXTURE1);
+//        glBindTexture(GL_TEXTURE_2D, textures[1]);
+//        glUniform1i(glGetUniformLocation(outShader.Program,"texture1"), 1);
+//
         outShader.Use();
         
 		GLint modelLoc = glGetUniformLocation(outShader.Program, "model");
@@ -340,20 +344,41 @@ int main(int argc, char **argv)
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 		glUniformMatrix4fv(projectLoc, 1, GL_FALSE, glm::value_ptr(projection));
 		
-		for (int i = 0; i < sizeof(cubePositions) / sizeof(cubePositions[0]); ++i)
-		{ 
-			//std::cout << "this length" << sizeof(cubePositions) / sizeof(cubePositions[0]) << std::endl;
-			glm::mat4 model;
-			model = glm::translate(model, cubePositions[i]);
-			model = glm::rotate(model, (GLfloat)glfwGetTime()*0.5f, glm::vec3(0.5f, 1.0f, 1.0f));
-			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-
-			glBindVertexArray(VAO);
-			
-	//        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-			glDrawArrays(GL_TRIANGLES, 0, 36);
-			}
+        glm::mat4 model;
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+//        model = glm::rotate(model, (GLfloat)glfwGetTime()*0.5f, glm::vec3(0.5f, 1.0f, 1.0f));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        
+        GLint objectColorLoc = glGetUniformLocation(outShader.Program, "objectColor");
+        GLint lightColorLoc  = glGetUniformLocation(outShader.Program, "lightColor");
+        glUniform3f(objectColorLoc, 1.0f, 0.5f, 0.31f);
+        glUniform3f(lightColorLoc,  1.0f, 1.0f, 1.0f); // Also set light's color (white)
+        
+        glBindVertexArray(VAO);
+        // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
         glBindVertexArray(0);
+        
+        lamp_shader.Use();
+        
+        modelLoc = glGetUniformLocation(lamp_shader.Program, "model");
+        viewLoc = glGetUniformLocation(lamp_shader.Program, "view");
+        projectLoc = glGetUniformLocation(lamp_shader.Program, "projection");
+        
+       
+        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+        glUniformMatrix4fv(projectLoc, 1, GL_FALSE, glm::value_ptr(projection));
+        
+        glm::mat4 lampModel;
+        lampModel = glm::translate(lampModel, glm::vec3(2.5f, 0.0f, -5.0f));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(lampModel));
+        
+        glBindVertexArray(lightVAO);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glBindVertexArray(0);
+        
+        
+        
         
         
         glfwSwapBuffers(window);
