@@ -41,4 +41,6 @@ add_subdirectory(camera_learn)
 
 add_subdirectory(colors)
 
+add_subdirectory(phong)
+
 
