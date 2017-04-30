@@ -71,6 +71,25 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
     lastY = ypos;
 
 	camera.ProcessMouseMovement(xoffset, yoffset);
+    
+    //GLfloat sensitivity = 0.05;	// Change this value to your liking
+    //xoffset *= sensitivity;
+    //yoffset *= sensitivity;
+    //
+    //yaw   += xoffset;
+    //pitch += yoffset;
+    //// Make sure that when pitch is out of bounds, screen doesn't get flipped
+    //if (pitch > 89.0f)
+    //    pitch = 89.0f;
+    //if (pitch < -89.0f)
+    //    pitch = -89.0f;
+    //
+    //glm::vec3 front;
+    //
+    //front.x = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+    //front.y = sin(glm::radians(pitch));
+    //front.z = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    //cameraFront = glm::normalize(front);
 }
 
 
@@ -272,16 +291,6 @@ int main(int argc, char **argv)
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     
     glBindVertexArray(0);
-
-	// create light VAO
-	GLuint lightVAO;
-	glGenVertexArrays(1, &lightVAO);
-	glBindVertexArray(lightVAO);
-	glBindTexture(GL_ARRAY_BUFFER, VBO);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
-	glEnableVertexAttribArray(0);
-	glBindVertexArray(0);
-
     // Unbind VAO (it's always a good thing to unbind any buffer/array to prevent strange bugs), remember: do NOT unbind the EBO, keep it bound to this VAO
     
 /*    glm::mat4 model;
