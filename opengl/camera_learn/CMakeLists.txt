@@ -27,12 +27,16 @@ message(STATUS "link_directories: " ${OUT_VAR})
 
 set(EXTRA_LIBS ${EXTRA_LIBS} glew glfw3 SOIL)
 
+set(INC_LST 
+		../custom/Shader.h
+		../custom/Camera.h)
+
 set(SRC_LST
 		main.cpp
 		../custom/Shader.cpp
         ../custom/Camera.cpp
 		)
-add_executable(camera_learn ${SRC_LST})
+add_executable(camera_learn ${SRC_LST} ${INC_LST})
 
 if (MAC_OS_X)
     set(APPLE_FM "Cocoa" "CoreVideo" "IOKit" "OpenGL")

@@ -19,13 +19,15 @@ enum Camera_Movement {
 };
 
 // Default camera values
-const GLfloat YAW        = -90.0f;
+const GLfloat YAW        = 180.0f;
 const GLfloat PITCH      =  0.0f;
 const GLfloat SPEED      =  3.0f;
 const GLfloat SENSITIVTY =  0.25f;
 const GLfloat FOV       =  45.0f;
 const GLfloat NEAR_DIS    = 0.1f;
 const GLfloat FAR_DIS     = 100.0f;
+const GLint WIDTH = 800;
+const GLint HEIGHT = 600;
 
 
 // An abstract camera class that processes input and calculates the corresponding Eular Angles, Vectors and Matrices for use in OpenGL
@@ -45,13 +47,16 @@ public:
     GLfloat MovementSpeed;
     GLfloat MouseSensitivity;
     GLfloat FieldOfView;
+	GLint ScreenWidth;
+	GLint ScreenHeight;
     
     // Constructor with vectors
-    Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f),
-           GLfloat yaw = YAW, GLfloat pitch = PITCH);
+    Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f),
+           GLfloat yaw = YAW, GLfloat pitch = PITCH, GLint width=WIDTH, GLint height=HEIGHT);
 
     // Constructor with scalar values
-    Camera(GLfloat posX, GLfloat posY, GLfloat posZ, GLfloat upX, GLfloat upY, GLfloat upZ, GLfloat yaw, GLfloat pitch);
+    Camera(GLfloat posX, GLfloat posY, GLfloat posZ, GLfloat upX, GLfloat upY, GLfloat upZ, GLfloat yaw,
+		GLfloat pitch, GLint width=WIDTH, GLint height=HEIGHT);
 
     
     // Returns the view matrix calculated using Eular Angles and the LookAt Matrix

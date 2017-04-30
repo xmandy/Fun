@@ -9,16 +9,10 @@
 #include "gtc/matrix_transform.hpp"
 #include "gtc/type_ptr.hpp"
 #include "PlatformUtils.h"
+#include "Camera.h"
 
 int ScreenWidth = 640;
 int ScreenHeight = 480;
-
-GLfloat yaw = 180.0f;
-GLfloat pitch = 0.0f;
-
-glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
-glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
 
 GLfloat deltaTime = 0.0f;
 GLfloat lastFrame = 0.0f;
@@ -26,15 +20,42 @@ GLfloat lastFrame = 0.0f;
 GLfloat lastX = ScreenWidth / 2.0;
 GLfloat lastY = ScreenHeight / 2.0;
 
+Camera camera = Camera();
+bool keys[1024];
+
+void DoCameraMovements()
+{
+	if (keys[GLFW_KEY_W])
+		camera.ProcessKeyboard(FORWARD, deltaTime);
+	if (keys[GLFW_KEY_S])
+		camera.ProcessKeyboard(BACKWARD, deltaTime);
+	if (keys[GLFW_KEY_A])
+		camera.ProcessKeyboard(LEFT, deltaTime);
+	if (keys[GLFW_KEY_D])
+		camera.ProcessKeyboard(RIGHT, deltaTime);
+}
+
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode)
 {
     if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
     {
         glfwSetWindowShouldClose(window, GL_TRUE);
     }
+	if (key >= 0 && key < 1024)
+	{
+		if (action == GLFW_PRESS)
+			keys[key] = true;
+		else if (action == GLFW_RELEASE)
+			keys[key] = false;
+	}
 }
 
 bool firstMouse = true;
+
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+	camera.ProcessMouseScroll(yoffset);
+}
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
@@ -48,25 +69,27 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
     GLfloat yoffset = ypos - lastY;
     lastX = xpos;
     lastY = ypos;
+
+	camera.ProcessMouseMovement(xoffset, yoffset);
     
-    GLfloat sensitivity = 0.05;	// Change this value to your liking
-    xoffset *= sensitivity;
-    yoffset *= sensitivity;
-    
-    yaw   += xoffset;
-    pitch += yoffset;
-    // Make sure that when pitch is out of bounds, screen doesn't get flipped
-    if (pitch > 89.0f)
-        pitch = 89.0f;
-    if (pitch < -89.0f)
-        pitch = -89.0f;
-    
-    glm::vec3 front;
-    
-    front.x = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-    front.y = sin(glm::radians(pitch));
-    front.z = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-    cameraFront = glm::normalize(front);
+    //GLfloat sensitivity = 0.05;	// Change this value to your liking
+    //xoffset *= sensitivity;
+    //yoffset *= sensitivity;
+    //
+    //yaw   += xoffset;
+    //pitch += yoffset;
+    //// Make sure that when pitch is out of bounds, screen doesn't get flipped
+    //if (pitch > 89.0f)
+    //    pitch = 89.0f;
+    //if (pitch < -89.0f)
+    //    pitch = -89.0f;
+    //
+    //glm::vec3 front;
+    //
+    //front.x = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+    //front.y = sin(glm::radians(pitch));
+    //front.z = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    //cameraFront = glm::normalize(front);
 }
 
 
@@ -110,6 +133,7 @@ int main(int argc, char **argv)
     glfwSetKeyCallback(window, key_callback);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetCursorPosCallback(window, mouse_callback);
+	glfwSetScrollCallback(window, scroll_callback);
     
     int width,height;
     glfwGetFramebufferSize(window, &width, &height);
@@ -269,7 +293,7 @@ int main(int argc, char **argv)
     glBindVertexArray(0);
     // Unbind VAO (it's always a good thing to unbind any buffer/array to prevent strange bugs), remember: do NOT unbind the EBO, keep it bound to this VAO
     
-    glm::mat4 model;
+/*    glm::mat4 model;
     model = glm::rotate(model, glm::radians(55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
     
     glm::mat4 view;
@@ -277,11 +301,20 @@ int main(int argc, char **argv)
     
     glm::mat4 projection;
     projection = glm::perspective(glm::radians(45.0f), (GLfloat)ScreenWidth / (GLfloat)ScreenHeight, 0.1f, 100.0f);
-    
+ */   
+
+	std::cout << "111" << camera.Front.x << " " << camera.Front.y << " " << camera.Front.z << std::endl;
+
+
     glEnable(GL_DEPTH_TEST);
    
     while (!glfwWindowShouldClose(window)) {
+		GLfloat current = glfwGetTime();
+		deltaTime = current - lastFrame;
+		lastFrame = current;
+
         glfwPollEvents();
+		DoCameraMovements();
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
@@ -301,7 +334,8 @@ int main(int argc, char **argv)
 		GLint viewLoc = glGetUniformLocation(outShader.Program, "view");
 		GLint projectLoc = glGetUniformLocation(outShader.Program, "projection");
         glm::mat4 view;
-        view = glm::lookAt(cameraPos, cameraPos+cameraFront, cameraUp);
+		view = camera.GetViewMatrix();
+		glm::mat4 projection = camera.GetProjectionMatrix();
 
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 		glUniformMatrix4fv(projectLoc, 1, GL_FALSE, glm::value_ptr(projection));
