@@ -291,10 +291,10 @@ int main(int argc, char **argv)
 	std::string vs_path;
 	std::string ps_path;
 	common::GetShaderPath(vs_path, "phong.vs");
-	common::GetShaderPath(ps_path, "phong.ps");
+	common::GetShaderPath(ps_path, "material.ps");
     Shader outShader(vs_path.c_str(), ps_path.c_str());
  
-    glm::vec3 lightPos(1.5f, 1.0f, 2.0f);
+    glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 
     glEnable(GL_DEPTH_TEST);
    
@@ -336,14 +336,30 @@ int main(int argc, char **argv)
 //        model = glm::rotate(model, (GLfloat)glfwGetTime()*0.5f, glm::vec3(0.5f, 1.0f, 1.0f));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         
-        GLint objectColorLoc = glGetUniformLocation(outShader.Program, "objectColor");
-        GLint lightColorLoc  = glGetUniformLocation(outShader.Program, "lightColor");
-        GLint lightPosLoc = glGetUniformLocation(outShader.Program, "lightPos");
 		GLint viewPosLoc = glGetUniformLocation(outShader.Program, "viewPos");
-        glUniform3f(objectColorLoc, 1.0f, 0.5f, 0.31f);
-        glUniform3f(lightColorLoc,  1.0f, 1.0f, 1.0f); // Also set light's color (white)
-        glUniform3f(lightPosLoc, lightPos.x, lightPos.y, lightPos.z);
 		glUniform3f(viewPosLoc, camera.Position.x, camera.Position.y, camera.Position.z);
+        
+        
+		GLint ambientLoc = glGetUniformLocation(outShader.Program, "material.ambient");
+		GLint diffuseLoc = glGetUniformLocation(outShader.Program, "material.diffuse");
+		GLint specularLoc = glGetUniformLocation(outShader.Program, "material.specular");
+		GLint shininessLoc = glGetUniformLocation(outShader.Program, "material.shininess");
+        
+        glUniform3f(ambientLoc, 1.0f, 0.5f, 0.31f);
+        glUniform3f(diffuseLoc, 1.0f, 0.5f, 0.31f);
+        glUniform3f(specularLoc, 0.5f, 0.5f, 0.5f);
+        glUniform1f(shininessLoc, 32.0f );
+        
+        GLint lightPosLoc = glGetUniformLocation(outShader.Program, "light.position");
+        GLint lightAmbientLoc = glGetUniformLocation(outShader.Program, "light.ambient");
+        GLint lightDiffuseLoc = glGetUniformLocation(outShader.Program, "light.diffuse");
+        GLint lightSpecularLoc = glGetUniformLocation(outShader.Program, "light.specular");
+        glUniform3f(lightPosLoc, lightPos.x, lightPos.y, lightPos.z);
+        glUniform3f(lightAmbientLoc, 0.2f, 0.2f, 0.2f);
+        glUniform3f(lightDiffuseLoc, 0.5f, 0.5f, 0.5f);
+        glUniform3f(lightSpecularLoc, 1.0f, 1.0f, 1.0f);
+
+        
         
         glBindVertexArray(VAO);
         // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
