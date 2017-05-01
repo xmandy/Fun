@@ -294,7 +294,7 @@ int main(int argc, char **argv)
 	common::GetShaderPath(ps_path, "phong.ps");
     Shader outShader(vs_path.c_str(), ps_path.c_str());
  
-    glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
+    glm::vec3 lightPos(1.5f, 1.0f, 2.0f);
 
     glEnable(GL_DEPTH_TEST);
    
@@ -339,9 +339,11 @@ int main(int argc, char **argv)
         GLint objectColorLoc = glGetUniformLocation(outShader.Program, "objectColor");
         GLint lightColorLoc  = glGetUniformLocation(outShader.Program, "lightColor");
         GLint lightPosLoc = glGetUniformLocation(outShader.Program, "lightPos");
+		GLint viewPosLoc = glGetUniformLocation(outShader.Program, "viewPos");
         glUniform3f(objectColorLoc, 1.0f, 0.5f, 0.31f);
         glUniform3f(lightColorLoc,  1.0f, 1.0f, 1.0f); // Also set light's color (white)
         glUniform3f(lightPosLoc, lightPos.x, lightPos.y, lightPos.z);
+		glUniform3f(viewPosLoc, camera.Position.x, camera.Position.y, camera.Position.z);
         
         glBindVertexArray(VAO);
         // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
