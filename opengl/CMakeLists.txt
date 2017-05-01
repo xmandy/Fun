@@ -43,4 +43,6 @@ add_subdirectory(colors)
 
 add_subdirectory(phong)
 
+add_subdirectory(material)
+
 

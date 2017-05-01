@@ -291,10 +291,10 @@ int main(int argc, char **argv)
 	std::string vs_path;
 	std::string ps_path;
 	common::GetShaderPath(vs_path, "phong.vs");
-	common::GetShaderPath(ps_path, "material.ps");
+	common::GetShaderPath(ps_path, "phong.ps");
     Shader outShader(vs_path.c_str(), ps_path.c_str());
  
-    glm::vec3 lightPos(10.0f, 10.0f, 2.0f);
+    glm::vec3 lightPos(1.5f, 1.0f, 2.0f);
 
     glEnable(GL_DEPTH_TEST);
    
@@ -344,18 +344,6 @@ int main(int argc, char **argv)
         glUniform3f(lightColorLoc,  1.0f, 1.0f, 1.0f); // Also set light's color (white)
         glUniform3f(lightPosLoc, lightPos.x, lightPos.y, lightPos.z);
 		glUniform3f(viewPosLoc, camera.Position.x, camera.Position.y, camera.Position.z);
-
-
-		// material param
-		GLint ambientLoc = glGetUniformLocation(outShader.Program, "material.ambient");
-		GLint diffuseLoc = glGetUniformLocation(outShader.Program, "material.diffuse");
-		GLint specularLoc = glGetUniformLocation(outShader.Program, "material.specular");
-		GLint shininessLoc = glGetUniformLocation(outShader.Program, "material.shininess");
-		glUniform3f(ambientLoc, 0.0f, 0.5f, 0.31f);
-		glUniform3f(diffuseLoc, 0.0f, 0.5f, 0.31f);
-		glUniform3f(specularLoc, 0.0f, 0.5f, 0.5f);
-		glUniform1f(shininessLoc, 128.0f);
-
         
         glBindVertexArray(VAO);
         // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
