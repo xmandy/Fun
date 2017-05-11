@@ -45,4 +45,6 @@ add_subdirectory(phong)
 
 add_subdirectory(material)
 
+add_subdirectory(light_learn)
+
 

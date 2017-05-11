@@ -1,0 +1,91 @@
+#version 330 core
+
+// 材质
+struct Material
+{
+    sampler2D diffuse;
+    sampler2D specular;
+
+    float shininess;
+};
+uniform Material material;
+
+// 平行光
+struct DirLight {
+    vec3 direction;
+
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+};
+uniform DirLight dirLight;
+
+
+// 点光源
+struct PointLight {
+    vec3 position;
+
+    float constant;
+    float linear;
+    float quardratic;
+
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+};
+
+#define NR_POINT_LIGHTS 4
+uniform PointLight pointLights[NR_POINT_LIGHTS];
+
+
+// 闪光灯光源
+struct FlashLight {
+    vec3 position;
+    vec3 direction;
+    float cutOff;
+    float outCutOff;
+
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+};
+
+uniform FlashLight flashLight;
+
+in vec3 FragPos;
+in vec3 Normal;
+in vec2 TexCoord;
+
+out vec4 color;
+
+uniform vec3 viewPos;
+
+vec3 CalDirLight(DirLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec3 ambient, vec3 diffuse, vec3 specular, float shininess);
+
+void main()
+{
+    // 大多数ambient和diffuse是一样的
+    vec3 lmAmbient = vec3(texture(material.diffuse, TexCoord));
+    vec3 lmdiffuse = lmAmbient;
+    vec3 lmSpecular = vec3(texture(material.specular, TexCoord));
+    float shininess = material.shininess;
+
+    vec3 viewDir = normalize(viewPos - FragPos);
+
+	vec3 result = CalDirLight(dirLight, Normal, FragPos, viewDir, lmAmbient, lmdiffuse, lmSpecular, shininess);
+
+	color = vec4(result, 1.0f);
+}
+
+vec3 CalDirLight(DirLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec3 ambient, vec3 diffuse, vec3 specular, float shininess)
+{
+    vec3 lightDir = normalize(-light.direction);
+    float diff_factor = max(dot(lightDir, normal), 0.0);
+    vec3 reflectDir = reflect(-lightDir, normal);
+    float spec_factor = pow(max(dot(reflectDir, viewDir), 0.0), shininess);
+
+    vec3 ambient_color = light.ambient * ambient;
+    vec3 diffuse_color = light.diffuse * diffuse * diff_factor;
+    vec3 specular_color = light.specular * specular * spec_factor;
+    return ambient_color + diffuse_color + specular_color;
+}
