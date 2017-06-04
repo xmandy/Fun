@@ -8,6 +8,7 @@
 #include "Shader.h"
 #include <iostream>
 #include <sstream>
+#include <glm.hpp>
 
 
 
@@ -22,23 +23,23 @@ struct Vertex
 struct Texture 
 {
 	GLuint id;
-	string tex_type;
-	//aiString path;
+	std::string tex_type;
+    std::string path;
 };
 
 class Mesh {
 public:
 	/* Mesh Data*/
-	vector<Vertex> vertices;
-	vector<unsigned int> indices;
-	vector<Texture> textures;
+    std::vector<Vertex> vertices;
+    std::vector<unsigned int> indices;
+    std::vector<Texture> textures;
 
-	Mesh(vector<Vertex> &vertices, vector<unsigned int> &indices, vector<Texture> &textures);
+    Mesh(std::vector<Vertex> &vertices, std::vector<unsigned int> &indices, std::vector<Texture> &textures);
 	void Draw(Shader &shader);
 
 private:
 	void setupMesh();
-	GLuint mVAO, mVBO, mEBO,
+	GLuint mVAO, mVBO, mEBO;
 };
 
 

@@ -47,4 +47,6 @@ add_subdirectory(material)
 
 add_subdirectory(light_learn)
 
+add_subdirectory(model)
+
 

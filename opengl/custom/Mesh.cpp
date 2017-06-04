@@ -1,10 +1,11 @@
 #include "Mesh.h"
 
-Mesh::Mesh(vector<Vertex> &vertices, vector<unsigned int> &indices, vector<Texture> &textures)
+Mesh::Mesh(std::vector<Vertex> &vertices, std::vector<unsigned int> &indices, std::vector<Texture> &textures)
 {
 	this->vertices = vertices;
 	this->indices = indices;
 	this->textures = textures;
+    setupMesh();
 }
 
 void Mesh::setupMesh()
@@ -16,10 +17,10 @@ void Mesh::setupMesh()
 	glBindVertexArray(mVAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, mVBO);
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mEBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
 
 	// vertex shader attribute
 
@@ -45,15 +46,16 @@ void Mesh::Draw(Shader &shader)
 	for (int i = 0; i < textures.size(); ++i)
 	{
 		glActiveTexture(GL_TEXTURE0 + i);
-		stringstream ss;
-		string num;
-		string name = textures[i].tex_type;
+        std::stringstream ss;
+        std::string num;
+        std::string name = textures[i].tex_type;
 		if (name == "texture_diffuse")
 			ss << diffuseNr++;
 		else if (name == "texture_specular")
 			ss << specularNr++;
 		num = ss.str();
-		glUniform1i(glGetUniformLocation(shader.Program, ("material." + name + num).c_str()), i);
+//		glUniform1i(glGetUniformLocation(shader.Program, ("material." + name + num).c_str()), i);
+		glUniform1i(glGetUniformLocation(shader.Program, (name + num).c_str()), i);
 		glBindTexture(GL_TEXTURE_2D, textures[i].id);
 	}
 
