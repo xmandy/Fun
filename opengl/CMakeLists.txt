@@ -49,4 +49,6 @@ add_subdirectory(light_learn)
 
 add_subdirectory(model)
 
+add_subdirectory(depth)
+
 
