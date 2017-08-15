@@ -51,4 +51,6 @@ add_subdirectory(model)
 
 add_subdirectory(depth)
 
+add_subdirectory(framebuffer)
+
 
