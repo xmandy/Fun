@@ -53,4 +53,6 @@ add_subdirectory(depth)
 
 add_subdirectory(framebuffer)
 
+add_subdirectory(geo_shader)
+
 
