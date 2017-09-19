@@ -12,7 +12,8 @@ class Shader
 {
 	public:
 		GLuint Program;
-		Shader(const GLchar* vertexPath, const GLchar* fragmentPath);
+        GLuint CreateShader(const GLchar* path, GLuint shader_type);
+		Shader(const GLchar* vertexPath, const GLchar* fragmentPath, const GLchar* geometryPath=NULL);
 		void Use();
 };
 #endif
