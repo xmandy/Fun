@@ -25,7 +25,7 @@ link_directories(${INK_DIR})
 get_directory_property(OUT_VAR LINK_DIRECTORIES)
 message(STATUS "link_directories: " ${OUT_VAR})
 
-set(EXTRA_LIBS ${EXTRA_LIBS} glew glfw3 SOIL assimp)
+set(EXTRA_LIBS ${EXTRA_LIBS} glew glfw3 SOIL assimp assimp-vc140-mt.dll)
 
 set(INC_LST 
 		../custom/Mesh.h

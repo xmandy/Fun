@@ -103,16 +103,17 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
         vertex.Normal.y = mesh->mNormals[i].y;
         vertex.Normal.z = mesh->mNormals[i].z;
         
-        // assimp 支持一个顶点有多个纹理坐标，最多可达8个
-        if (mesh->mTextureCoords[0])
-        {
-            vertex.TexCoords.x = mesh->mTextureCoords[0][i].x;
-            vertex.TexCoords.y = mesh->mTextureCoords[0][i].y;
-        }
-        else
-        {
+		// assimp support multi uv coords of one vertex, the maximum is 8
+		if (mesh->mTextureCoords[0])
+		{
+			vertex.TexCoords.x = mesh->mTextureCoords[0][i].x;
+			vertex.TexCoords.y = mesh->mTextureCoords[0][i].y;
+		}
+		else
+		{
             vertex.TexCoords = glm::vec2(0.0f, 0.0f);
-        }
+		}
+
         vertices.push_back(vertex);
     }
     
