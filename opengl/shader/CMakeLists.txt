@@ -24,7 +24,7 @@ message(STATUS "link_directories: " ${OUT_VAR})
 
 set(EXTRA_LIBS ${EXTRA_LIBS} glew glfw3)
 
-set(SRC_LST main.cpp ../custom/Shader.cpp)
+set(SRC_LST ../common/PlatformUtils.cpp main.cpp ../custom/Shader.cpp)
 add_executable(shader ${SRC_LST})
 
 if (MAC_OS_X)

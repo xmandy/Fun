@@ -292,7 +292,9 @@ int main(int argc, char **argv)
     }
     
     Mesh mesh(tmp1, tmp2, tmp3);
-    Model ourModel("/Users/yangxue/workspace/MyRoad/opengl/models/nanosuit/nanosuit.obj");
+	std::string modelPath;
+	common::GetModelPath(modelPath, "nanosuit/nanosuit.obj");
+    Model ourModel(modelPath.c_str());
     
     while (!glfwWindowShouldClose(window)) {
 		GLfloat current = glfwGetTime();

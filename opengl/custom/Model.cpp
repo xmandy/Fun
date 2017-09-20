@@ -10,8 +10,10 @@
 
 unsigned int TextureFromFile(const char *path, const std::string &directory, bool gamma)
 {
-    std::string filename = std::string(path);
-    filename = directory + '/' + filename;
+	std::string filename;
+	filename.assign(directory);
+	filename.append(common::PATH_SEPARATOR);
+	filename.append(path);
     
     unsigned int textureID;
     glGenTextures(1, &textureID);
@@ -69,7 +71,7 @@ void Model::loadModel(std::string path)
         std::cout<< "Error in assimp load scene: " << import.GetErrorString() << std::endl;
         return;
     }
-    directory = path.substr(0, path.find_last_of("/"));
+    directory = path.substr(0, path.find_last_of(common::PATH_SEPARATOR));
     processNode(scene->mRootNode, scene);
 }
 

@@ -27,6 +27,7 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#include "PlatformUtils.h"
 
 //#include <stb_image.h>
 #include <SOIL.h>
@@ -38,7 +39,7 @@ unsigned int TextureFromFile(const char *path, const std::string &directory, boo
 class Model
 {
 public:
-    Model(char *path)
+    Model(const char *path)
     {
         loadModel(path);
     }

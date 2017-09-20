@@ -33,7 +33,8 @@ set(INC_LST
 		../custom/Shader.h
 		../custom/Camera.h)
 
-set(SRC_LST
+set(SRC_LST 
+		../common/PlatformUtils.cpp
 		main.cpp
 		../custom/Mesh.cpp
 		../custom/Shader.cpp

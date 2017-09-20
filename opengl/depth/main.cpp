@@ -123,10 +123,10 @@ int main(int argc, char **argv)
     // Use shader class
 	std::string vs_path;
 	std::string ps_path;
-    std::string geo_path
+	std::string geo_path;
 	common::GetShaderPath(vs_path, "advance.vs");
 	common::GetShaderPath(ps_path, "advance.ps");
-    common::GetShaderPath(geo_path, "exloding.gs")
+	common::GetShaderPath(geo_path, "exloding.gs");
     Shader outShader(vs_path.c_str(), ps_path.c_str());
     
     // create texures

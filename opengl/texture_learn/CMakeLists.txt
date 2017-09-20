@@ -27,7 +27,7 @@ message(STATUS "link_directories: " ${OUT_VAR})
 
 set(EXTRA_LIBS ${EXTRA_LIBS} glew glfw3 SOIL)
 
-set(SRC_LST
+set(SRC_LST ../common/PlatformUtils.cpp
 		main.cpp
 		../custom/Shader.cpp
 		)
