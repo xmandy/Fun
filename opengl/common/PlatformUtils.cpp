@@ -46,7 +46,7 @@ void GetModelPath(std::string &path, const char *modelName)
 
 #endif // WIN32
 
-#ifdef MAC_OSX
+#ifdef MAC_OS_X
 	path.assign(MODEL_PATH);
 	path.append(modelName);
 

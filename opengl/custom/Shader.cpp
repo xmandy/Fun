@@ -21,9 +21,17 @@ GLuint Shader::CreateShader(const GLchar *path, GLuint shader_type)
         return -1;
     }
     
+    if (code.length() == 0)
+    {
+        std::cout << "Shader path: " << path << " may be wrong!" << std::endl;
+        return -1;
+    }
+    
     const GLchar *shaderCode = code.c_str();
     
-//    std::cout<< "shader code" << std::endl;
+    std::cout<< "shader code" << std::endl;
+    std::cout<< shaderCode << std::endl;
+    std::cout<<"==============="<< std::endl;
 //    std::cout << shaderCode << std::endl;
     
     GLuint shaderID;

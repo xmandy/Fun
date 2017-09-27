@@ -247,9 +247,12 @@ int main(int argc, char **argv)
     // Use shader class
 	std::string vs_path;
 	std::string ps_path;
-	common::GetShaderPath(vs_path, "simple_model.vs");
+	std::string gs_path;
+//	common::GetShaderPath(vs_path, "simple_model.vs");
+	common::GetShaderPath(vs_path, "model_interface.vs");
 	common::GetShaderPath(ps_path, "simple_model.ps");
-    Shader outShader(vs_path.c_str(), ps_path.c_str());
+    common::GetShaderPath(gs_path, "exploding.gs");
+    Shader outShader(vs_path.c_str(), ps_path.c_str(), gs_path.c_str());
  
     glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 
@@ -292,7 +295,9 @@ int main(int argc, char **argv)
     }
     
     Mesh mesh(tmp1, tmp2, tmp3);
-    Model ourModel("/Users/yangxue/workspace/MyRoad/opengl/models/nanosuit/nanosuit.obj");
+    std::string modelPath;
+    common::GetModelPath(modelPath, "nanosuit/nanosuit.obj");
+    Model ourModel(modelPath.c_str());
     
     while (!glfwWindowShouldClose(window)) {
 		GLfloat current = glfwGetTime();
@@ -316,6 +321,9 @@ int main(int argc, char **argv)
 
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 		glUniformMatrix4fv(projectLoc, 1, GL_FALSE, glm::value_ptr(projection));
+        
+        GLint timeLoc = glGetUniformLocation(outShader.Program, "time");
+        glUniform1f(timeLoc, current);
         
 
         glm::mat4 model;
