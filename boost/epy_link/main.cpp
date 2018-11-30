@@ -1,6 +1,7 @@
 #include <Python.h>
 
 extern "C" void initmy();
+extern "C" void inithello_ext();
 
 int main(int argc, char const *argv[])
 {
@@ -23,6 +24,7 @@ int main(int argc, char const *argv[])
     PyList_Insert(py_path, 0, PyString_FromString("."));
 
     initmy();
+    inithello_ext();
 
 
     pName = PyString_FromString(argv[1]);
