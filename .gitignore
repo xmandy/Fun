@@ -1,5 +1,5 @@
 *.swp
 .DS_Store
-boost/build
+boost/build*
 .vscode
 *.pyc
