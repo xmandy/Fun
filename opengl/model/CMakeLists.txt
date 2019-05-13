@@ -6,16 +6,16 @@ cmake_policy(SET CMP0015 NEW)
 project(model)
 
 if (WIN32)
-    set(INC_DIR "../3rdlibs/Base/Include")
-    set(INK_DIR "../3rdlibs/Base/Libs" ../3rdlibs/SOIL/lib ../3rdlibs/assimp-3.3.1/lib)
+    set(INC_DIR "${CMAKE_SOURCE_DIR}/3rdlibs/Base/Include")
+    set(INK_DIR "${CMAKE_SOURCE_DIR}/3rdlibs/Base/Libs" ${CMAKE_SOURCE_DIR}/3rdlibs/SOIL/lib ${CMAKE_SOURCE_DIR}/3rdlibs/assimp-3.3.1/lib)
     set(EXTRA_LIBS ${EXTRA_LIBS} opengl32)
 elseif (MAC_OS_X)
     set(INC_DIR /usr/local/include/)
-    set(INK_DIR /usr/local/lib ../3rdlibs/SOIL/lib ../3rdlibs/assimp-3.3.1/lib)
+    set(INK_DIR /usr/local/lib ${CMAKE_SOURCE_DIR}/3rdlibs/SOIL/lib ${CMAKE_SOURCE_DIR}/3rdlibs/assimp-3.3.1/lib)
 endif()
 
-list(APPEND INC_DIR ../custom ../common)
-list(APPEND INC_DIR ../3rdlibs/SOIL/src ../3rdlibs/glm ../3rdlibs/assimp-3.3.1/include)
+list(APPEND INC_DIR ${CMAKE_SOURCE_DIR}/custom ${CMAKE_SOURCE_DIR}/common)
+list(APPEND INC_DIR ${CMAKE_SOURCE_DIR}/3rdlibs/SOIL/src ${CMAKE_SOURCE_DIR}/3rdlibs/glm ${CMAKE_SOURCE_DIR}/3rdlibs/assimp-3.3.1/include)
 
 
 include_directories(${INC_DIR})
@@ -28,18 +28,18 @@ message(STATUS "link_directories: " ${OUT_VAR})
 set(EXTRA_LIBS ${EXTRA_LIBS} glew glfw3 SOIL assimp assimp-vc140-mt.dll)
 
 set(INC_LST 
-		../custom/Mesh.h
-		../custom/Model.hpp
-		../custom/Shader.h
-		../custom/Camera.h)
+		${CMAKE_SOURCE_DIR}/custom/Mesh.h
+		${CMAKE_SOURCE_DIR}/custom/Model.hpp
+		${CMAKE_SOURCE_DIR}/custom/Shader.h
+		${CMAKE_SOURCE_DIR}/custom/Camera.h)
 
 set(SRC_LST 
-		../common/PlatformUtils.cpp
+		${CMAKE_SOURCE_DIR}/common/PlatformUtils.cpp
 		main.cpp
-		../custom/Mesh.cpp
-		../custom/Shader.cpp
-        ../custom/Camera.cpp
-		../custom/Model.cpp
+		${CMAKE_SOURCE_DIR}/custom/Mesh.cpp
+		${CMAKE_SOURCE_DIR}/custom/Shader.cpp
+        ${CMAKE_SOURCE_DIR}/custom/Camera.cpp
+		${CMAKE_SOURCE_DIR}/custom/Model.cpp
 		)
 add_executable(model ${SRC_LST} ${INC_LST})
 

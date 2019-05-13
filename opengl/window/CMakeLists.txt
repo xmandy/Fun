@@ -5,8 +5,8 @@ cmake_minimum_required(VERSION 2.6)
 project(window)
 
 if (WIN32)
-    set(INC_DIR "G:/My Documents/3rdLibraries/Include")
-    set(INK_DIR "G:/My Documents/3rdLibraries/Libs")
+    set(INC_DIR "${CMAKE_SOURCE_DIR}/3rdlibs/Base/Include")
+    set(INK_DIR "${CMAKE_SOURCE_DIR}/3rdlibs/Base/Libs" ${CMAKE_SOURCE_DIR}/3rdlibs/SOIL/lib)
     set(EXTRA_LIBS ${EXTRA_LIBS} glew glfw3 opengl32)
 elseif (MAC_OS_X)
     set(INC_DIR /usr/local/include/)
@@ -22,7 +22,7 @@ message(STATUS "link_directories: " ${OUT_VAR})
 
 set(EXTRA_LIBS ${EXTRA_LIBS} glew glfw3)
 
-set(SRC_LST ../common/PlatformUtils.cpp main.cpp)
+set(SRC_LST ${CMAKE_SOURCE_DIR}/common/PlatformUtils.cpp main.cpp)
 add_executable(window ${SRC_LST})
 
 if (MAC_OS_X)

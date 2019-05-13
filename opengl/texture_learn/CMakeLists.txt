@@ -6,16 +6,16 @@ cmake_policy(SET CMP0015 NEW)
 project(texture_learn)
 
 if (WIN32)
-    set(INC_DIR "../3rdlibs/Base/Include")
-    set(INK_DIR "../3rdlibs/Base/Libs" ../3rdlibs/SOIL/lib)
+    set(INC_DIR "${CMAKE_SOURCE_DIR}/3rdlibs/Base/Include")
+    set(INK_DIR "${CMAKE_SOURCE_DIR}/3rdlibs/Base/Libs" ${CMAKE_SOURCE_DIR}/3rdlibs/SOIL/lib)
     set(EXTRA_LIBS ${EXTRA_LIBS} opengl32)
 elseif (MAC_OS_X)
     set(INC_DIR /usr/local/include/)
-    set(INK_DIR /usr/local/lib ../3rdlibs/SOIL/lib)
+    set(INK_DIR /usr/local/lib ${CMAKE_SOURCE_DIR}/3rdlibs/SOIL/lib)
 endif()
 
-list(APPEND INC_DIR ../custom ../common)
-list(APPEND INC_DIR ../3rdlibs/SOIL/src ../3rdlibs/glm)
+list(APPEND INC_DIR ${CMAKE_SOURCE_DIR}/custom ${CMAKE_SOURCE_DIR}/common)
+list(APPEND INC_DIR ${CMAKE_SOURCE_DIR}/3rdlibs/SOIL/src ${CMAKE_SOURCE_DIR}/3rdlibs/glm)
 
 
 include_directories(${INC_DIR})
@@ -27,9 +27,9 @@ message(STATUS "link_directories: " ${OUT_VAR})
 
 set(EXTRA_LIBS ${EXTRA_LIBS} glew glfw3 SOIL)
 
-set(SRC_LST ../common/PlatformUtils.cpp
+set(SRC_LST ${CMAKE_SOURCE_DIR}/common/PlatformUtils.cpp
 		main.cpp
-		../custom/Shader.cpp
+		${CMAKE_SOURCE_DIR}/custom/Shader.cpp
 		)
 add_executable(texture_learn ${SRC_LST})
 
