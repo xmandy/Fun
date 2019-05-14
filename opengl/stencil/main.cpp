@@ -208,13 +208,13 @@ int main(int argc, char **argv)
     };
     GLfloat planeVertices[] = {
         // Positions            // Texture Coords (note we set these higher than 1 that together with GL_REPEAT as texture wrapping mode will cause the floor texture to repeat)
-        5.0f,  -0.5f,  5.0f,  2.0f, 0.0f,
+        5.0f,  -0.5f,  5.0f,  -0.5f, 0.0f,
         -5.0f, -0.5f,  5.0f,  0.0f, 0.0f,
-        -5.0f, -0.5f, -5.0f,  0.0f, 2.0f,
+        -5.0f, -0.5f, -5.0f,  0.0f, -0.5f,
         
-        5.0f,  -0.5f,  5.0f,  2.0f, 0.0f,
-        -5.0f, -0.5f, -5.0f,  0.0f, 2.0f,
-        5.0f,  -0.5f, -5.0f,  2.0f, 2.0f
+        5.0f,  -0.5f,  5.0f,  -0.5f, 0.0f,
+        -5.0f, -0.5f, -5.0f,  0.0f, -0.5f,
+        5.0f,  -0.5f, -5.0f,  -0.5f, -0.5f
     };
 
 
@@ -291,18 +291,32 @@ int main(int argc, char **argv)
         // glActiveTexture(GL_TEXTURE0);
         // We omit the glActiveTexture part since TEXTURE0 is already the default active texture unit. (sampler used in fragment is set to 0 as well as default)
         //glUniform1i(glGetUniformLocation(outShader.Program,"texture0"), 0);
-        
+
+        glm::mat4 view;
+		glm::mat4 projection;
+
+ 		outlineShader.Use();
+ 		GLint modelLoc0 = glGetUniformLocation(outlineShader.Program, "model");
+		GLint viewLoc0 = glGetUniformLocation(outlineShader.Program, "view");
+		GLint projectLoc0 = glGetUniformLocation(outlineShader.Program, "projection");
+
+		view = camera.GetViewMatrix();
+		projection = camera.GetProjectionMatrix();
+		glUniformMatrix4fv(viewLoc0, 1, GL_FALSE, glm::value_ptr(view));
+		glUniformMatrix4fv(projectLoc0, 1, GL_FALSE, glm::value_ptr(projection));
+
+       
 		       
         outShader.Use();
         
 		GLint modelLoc = glGetUniformLocation(outShader.Program, "model");
 		GLint viewLoc = glGetUniformLocation(outShader.Program, "view");
 		GLint projectLoc = glGetUniformLocation(outShader.Program, "projection");
-        glm::mat4 view;
 		view = camera.GetViewMatrix();
-		glm::mat4 projection = camera.GetProjectionMatrix();
+		projection = camera.GetProjectionMatrix();
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 		glUniformMatrix4fv(projectLoc, 1, GL_FALSE, glm::value_ptr(projection));
+
 
 		/*
 		first pass: just draw as normal, except update stencil buffer
@@ -333,7 +347,7 @@ int main(int argc, char **argv)
         
         // cube2
         model = glm::mat4();
-        model = glm::translate(model, glm::vec3(2.0f, 0.0f, 0.0f));
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.2f));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glDrawArrays(GL_TRIANGLES, 0, 36);
         glBindVertexArray(0);
@@ -346,30 +360,21 @@ int main(int argc, char **argv)
 		glDisable(GL_DEPTH_TEST);
 
 		outlineShader.Use();
- 		modelLoc = glGetUniformLocation(outlineShader.Program, "model");
-		viewLoc = glGetUniformLocation(outlineShader.Program, "view");
-		projectLoc = glGetUniformLocation(outlineShader.Program, "projection");
 
-		view = camera.GetViewMatrix();
-		projection = camera.GetProjectionMatrix();
-		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-		glUniformMatrix4fv(projectLoc, 1, GL_FALSE, glm::value_ptr(projection));
-
-
-        // cube1
+        // cube1 scale
 		glBindVertexArray(VAO);
 		GLfloat scale = 1.1f;
 		model = glm::mat4();
         model = glm::translate(model, glm::vec3(-1.0f, 0.0f, -1.0f));
 		model = glm::scale(model, glm::vec3(scale, scale, scale));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniformMatrix4fv(modelLoc0, 1, GL_FALSE, glm::value_ptr(model));
 		glDrawArrays(GL_TRIANGLES, 0, 36);
         
-        // cube2
+        // cube2 scale
         model = glm::mat4();
-        model = glm::translate(model, glm::vec3(2.0f, 0.0f, 0.0f));
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.2f));
 		model = glm::scale(model, glm::vec3(scale, scale, scale));
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        glUniformMatrix4fv(modelLoc0, 1, GL_FALSE, glm::value_ptr(model));
 		glDrawArrays(GL_TRIANGLES, 0, 36);
         glBindVertexArray(0);
        
