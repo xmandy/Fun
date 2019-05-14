@@ -30,6 +30,9 @@ endif()
 
 message(STATUS "cxx Flags: " ${CMAKE_CXXFLAGS})
 
+set(ASSET_ROOT ${CMAKE_SOURCE_DIR}/Assets)
+configure_file(${CMAKE_SOURCE_DIR}/common/PlatformUtils.h.in ${CMAKE_SOURCE_DIR}/common/PlatformUtils.h @ONLY)
+
 # add project
 add_subdirectory(window)
 

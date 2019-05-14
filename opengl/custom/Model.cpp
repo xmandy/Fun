@@ -8,11 +8,10 @@
 
 #include "Model.hpp"
 
-unsigned int TextureFromFile(const char *path, const std::string &directory, bool gamma)
+unsigned int TextureFromFile(const char *path, const std::string &dir, bool gamma)
 {
 	std::string filename;
-	filename.assign(directory);
-	filename.append(common::PATH_SEPARATOR);
+	filename.assign(dir);
 	filename.append(path);
     
     unsigned int textureID;
@@ -71,7 +70,6 @@ void Model::loadModel(std::string path)
         std::cout<< "Error in assimp load scene: " << import.GetErrorString() << std::endl;
         return;
     }
-    directory = path.substr(0, path.find_last_of(common::PATH_SEPARATOR));
     processNode(scene->mRootNode, scene);
 }
 
@@ -159,7 +157,7 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType 
         if (!loaded)
         {
             Texture texture;
-            texture.id = TextureFromFile(str.C_Str(), directory);
+            texture.id = TextureFromFile(str.C_Str(), modelDir);
             texture.tex_type = typeName;
             texture.path = str.C_Str();
             textures.push_back(texture);

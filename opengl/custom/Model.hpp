@@ -39,17 +39,22 @@ unsigned int TextureFromFile(const char *path, const std::string &directory, boo
 class Model
 {
 public:
-    Model(const char *path)
-    {
-        loadModel(path);
-    }
+	Model(const char *ModelName)
+	{
+		modelName = ModelName;
+		modelFilePath = common::GetModelFilePath(ModelName);
+		modelDir = common::GetModelDir(ModelName);
+		loadModel(modelFilePath);
+	}
     void Draw(Shader &shader);
     std::vector<Mesh> meshes;
     
 private:
     
-    std::string directory;
-    
+	std::string modelName;
+	std::string modelFilePath;
+	std::string modelDir;
+
     std::vector<Texture> textures_loaded;
     
     void loadModel(std::string path);

@@ -22,7 +22,7 @@ message(STATUS "link_directories: " ${OUT_VAR})
 
 set(EXTRA_LIBS ${EXTRA_LIBS} glew glfw3)
 
-set(SRC_LST ${CMAKE_SOURCE_DIR}/common/PlatformUtils.cpp main.cpp)
+set(SRC_LST  main.cpp)
 add_executable(window ${SRC_LST})
 
 if (MAC_OS_X)

@@ -1,0 +1,27 @@
+#ifndef PLATFORMUTILS_H
+#define PLATFORMUTILS_H
+
+#include <string>
+
+
+// 定义平台相关的一些参数
+namespace common {
+
+#cmakedefine ASSET_ROOT "@ASSET_ROOT@"
+
+#define TEXTURE_PATH "@ASSET_ROOT@/textures/"
+#define SHADERS_PATH "@ASSET_ROOT@/shaders/"
+#define MODEL_PATH "@ASSET_ROOT@/models/"
+
+	void GetTexturePath(std::string &path, const char* filename);
+
+
+	void GetShaderPath(std::string &path, const char* filename);
+
+	std::string GetModelDir(const char *modelName);
+	
+
+	std::string GetModelFilePath(const char *modelName);
+	
+}
+#endif

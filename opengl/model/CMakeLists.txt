@@ -25,7 +25,7 @@ link_directories(${INK_DIR})
 get_directory_property(OUT_VAR LINK_DIRECTORIES)
 message(STATUS "link_directories: " ${OUT_VAR})
 
-set(EXTRA_LIBS ${EXTRA_LIBS} glew glfw3 SOIL assimp assimp-vc140-mt.dll)
+set(EXTRA_LIBS ${EXTRA_LIBS} glew glfw3 SOIL assimp assimp-vc140-mt)
 
 set(INC_LST 
 		${CMAKE_SOURCE_DIR}/custom/Mesh.h
@@ -63,4 +63,12 @@ endif()
 message(STATUS "ExtraLibs: " ${EXTRA_LIBS})
 
 target_link_libraries(model ${EXTRA_LIBS})
+
+if (WIN32)
+	add_custom_command(TARGET model POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy_if_different
+	${CMAKE_SOURCE_DIR}/3rdlibs/assimp-3.3.1/lib/assimp-vc140-mt.dll
+	${PROJECT_BINARY_DIR}/Debug)
+
+endif()
 
