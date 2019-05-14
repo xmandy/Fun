@@ -295,9 +295,7 @@ int main(int argc, char **argv)
     }
     
     Mesh mesh(tmp1, tmp2, tmp3);
-    std::string modelPath;
-    common::GetModelPath(modelPath, "nanosuit/nanosuit.obj");
-    Model ourModel(modelPath.c_str());
+    Model ourModel("nanosuit");
     
     while (!glfwWindowShouldClose(window)) {
 		GLfloat current = glfwGetTime();

@@ -83,10 +83,6 @@ int main(int argc, char **argv)
         return 0;
     }
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-    const char* texture_file[2] = {
-        "metal.png",
-        "container_diffuse.png"
-    };
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -123,15 +119,18 @@ int main(int argc, char **argv)
     // Use shader class
 	std::string vs_path;
 	std::string ps_path;
-	std::string geo_path;
 	common::GetShaderPath(vs_path, "advance.vs");
 	common::GetShaderPath(ps_path, "advance.ps");
-	common::GetShaderPath(geo_path, "exloding.gs");
     Shader outShader(vs_path.c_str(), ps_path.c_str());
     
     // create texures
     int tWidth, tHeight;
-    
+
+	const char* texture_file[2] = {
+        "metal.png",
+        "container_diffuse.png"
+    };
+
     int texture_length = 2;
     
     GLuint *textures = new GLuint[texture_length];
@@ -215,19 +214,6 @@ int main(int argc, char **argv)
     };
 
 
-	glm::vec3 cubePositions[] = {
-		glm::vec3(0.0f, 0.0f, 0.0f),
-		glm::vec3(2.0f, 5.0f, -15.0f),
-		glm::vec3(-1.5f, -2.2f, -2.5f),
-		glm::vec3(-3.8f, -2.0f, -12.3f),
-		glm::vec3(2.4f, -0.4f, -3.5f),
-		glm::vec3(-1.7f, 3.0f, -7.5f),
-		glm::vec3(1.3f, -2.0f, -2.5f),
-		glm::vec3(1.5f, 2.0f, -2.5f),
-		glm::vec3(1.5f, 0.2f, -1.5f),
-		glm::vec3(-1.3f, 1.0f, -1.5f)
-	};
-
     GLuint VBO, VAO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -270,59 +256,18 @@ int main(int argc, char **argv)
 
     glEnable(GL_DEPTH_TEST);
     //glDepthFunc(GL_ALWAYS);
-    unsigned int renderTexture;
-    glGenTextures(1, &renderTexture);
-    glBindTexture(GL_TEXTURE_2D, renderTexture);
-    
+   
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, ScreenWidth, ScreenHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glBindTexture(GL_TEXTURE_2D, 0);
     
-    unsigned int rbo;
-    glGenRenderbuffers(1, &rbo);
-    glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, ScreenWidth, ScreenHeight);
-    glBindRenderbuffer(GL_RENDERBUFFER, 0);
-    
-    unsigned int fbo;
-    glGenFramebuffers(1, &fbo);
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderTexture, 0);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
     {
         std::cout<< "frame buffer incomplete!" << std::endl;
         return 0;
     }
     
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    
-    float quadVertices[] = {
-        -1.0f, 1.0f, 0.0f, 1.0f,
-        -1.0f, -1.0f, 0.0f, 0.0f,
-        1.0f, -1.0f, 1.0f, 0.0f,
-        
-        -1.0f, 1.0f, 0.0f, 1.0f,
-        1.0f, -1.0f, 1.0f, 0.0f,
-        1.0f, 1.0f, 1.0f, 1.0f,
-    };
-    
-    unsigned int quardVAO, quardVBO;
-    glGenVertexArrays(1, &quardVAO);
-    glGenBuffers(1, &quardVBO);
-    glBindVertexArray(quardVAO);
-    glBindBuffer(GL_ARRAY_BUFFER, quardVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2*sizeof(float)));
-    glBindVertexArray(0);
-    
-    
-    
-
     while (!glfwWindowShouldClose(window)) {
 		GLfloat current = glfwGetTime();
 		deltaTime = current - lastFrame;

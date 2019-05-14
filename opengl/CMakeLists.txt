@@ -58,4 +58,6 @@ add_subdirectory(framebuffer)
 
 add_subdirectory(geo_shader)
 
+add_subdirectory(stencil)
+
 
