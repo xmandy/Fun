@@ -322,11 +322,11 @@ int main(int argc, char **argv)
 		first pass: just draw as normal, except update stencil buffer
 		*/
 
-
 		glm::mat4 model;
 
 		// floor plane, do not update stencil buffer
 		glStencilMask(0x00);
+		glDisable(GL_DEPTH_TEST);
         glBindVertexArray(floorVAO);
         model = glm::mat4();
         glBindTexture(GL_TEXTURE_2D, textures[0]);
@@ -334,10 +334,13 @@ int main(int argc, char **argv)
         glDrawArrays(GL_TRIANGLES, 0, 6);
         glBindVertexArray(0);
  
+		
+		glEnable(GL_DEPTH_TEST);
 		// the stencil buffer init state is 0, so just pass all cubes and updates its pixel point in stencil buffer to 1
+        glBindTexture(GL_TEXTURE_2D, textures[1]);
+
 		glStencilFunc(GL_ALWAYS, 1, 0xFF);
 		glStencilMask(0xFF);
-        glBindTexture(GL_TEXTURE_2D, textures[1]);
         // cube1
 		glBindVertexArray(VAO);
 		model = glm::mat4();
@@ -345,20 +348,9 @@ int main(int argc, char **argv)
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glDrawArrays(GL_TRIANGLES, 0, 36);
         
-        // cube2
-        model = glm::mat4();
-        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.2f));
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-        glBindVertexArray(0);
-        
-		/*
-		second pass, draw larger cube only stencil buffer point is not 1, and use a different shader
-		*/
 		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
 		glStencilMask(0x00);
-		glDisable(GL_DEPTH_TEST);
-
+		//glDisable(GL_DEPTH_TEST);
 		outlineShader.Use();
 
         // cube1 scale
@@ -370,9 +362,33 @@ int main(int argc, char **argv)
 		glUniformMatrix4fv(modelLoc0, 1, GL_FALSE, glm::value_ptr(model));
 		glDrawArrays(GL_TRIANGLES, 0, 36);
         
+		glStencilMask(0xFF);
+		//glEnable(GL_DEPTH_TEST);
+
+		glStencilFunc(GL_ALWAYS, 0, 0xFF);
+		glClear(GL_STENCIL_BUFFER_BIT);
+        
+		glStencilFunc(GL_ALWAYS, 1, 0xFF);
+		glStencilMask(0xFF);
+        // cube2
+		outShader.Use();
+        model = glm::mat4();
+        model = glm::translate(model, glm::vec3(-0.2f, 0.0f, 0.2f));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+
+		
+		// second pass, draw larger cube only stencil buffer point is not 1, and use a different shader
+		
+		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+		glStencilMask(0x00);
+		//glDisable(GL_DEPTH_TEST);
+
+		outlineShader.Use();
+
         // cube2 scale
         model = glm::mat4();
-        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.2f));
+        model = glm::translate(model, glm::vec3(-0.2f, 0.0f, 0.2f));
 		model = glm::scale(model, glm::vec3(scale, scale, scale));
         glUniformMatrix4fv(modelLoc0, 1, GL_FALSE, glm::value_ptr(model));
 		glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -380,7 +396,7 @@ int main(int argc, char **argv)
        
 		// must reset mask to 1s
 		glStencilMask(0xFF);
-		glEnable(GL_DEPTH_TEST);
+		//glEnable(GL_DEPTH_TEST);
         
         glfwSwapBuffers(window);
     }
