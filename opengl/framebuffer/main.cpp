@@ -334,9 +334,9 @@ int main(int argc, char **argv)
         
         /***********************************************************************************/
         // first pass: draw to texture
-//        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
         glEnable(GL_DEPTH_TEST);
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
         
@@ -379,19 +379,19 @@ int main(int argc, char **argv)
         glDrawArrays(GL_TRIANGLES, 0, 6);
         glBindVertexArray(0);
         
-        glfwSwapBuffers(window);
-        continue;
+//        glfwSwapBuffers(window);
+//        continue;
         
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT);
         glDisable(GL_DEPTH_TEST);
         /***********************************************************************************/
         
         // pass 2: render the fbo bind texture to the quard
         screenShader.Use();
         glBindVertexArray(quardVAO);
-        glActiveTexture(GL_TEXTURE0);
+//        glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, renderTexture);
         //glUniform1i(glGetUniformLocation(screenShader.Program, "texture0"), 0);
         glDrawArrays(GL_TRIANGLES, 0, 6);
