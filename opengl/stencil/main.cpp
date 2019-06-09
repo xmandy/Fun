@@ -11,8 +11,8 @@
 #include "PlatformUtils.h"
 #include "Camera.h"
 
-int ScreenWidth = 640;
-int ScreenHeight = 480;
+int ScreenWidth = 1280;
+int ScreenHeight = 960;
 
 GLfloat deltaTime = 0.0f;
 GLfloat lastFrame = 0.0f;
