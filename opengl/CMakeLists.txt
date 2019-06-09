@@ -60,4 +60,6 @@ add_subdirectory(geo_shader)
 
 add_subdirectory(stencil)
 
+add_subdirectory(cylinder)
+
 
