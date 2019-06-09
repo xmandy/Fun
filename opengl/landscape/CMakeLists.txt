@@ -29,12 +29,15 @@ set(EXTRA_LIBS ${EXTRA_LIBS} glew glfw3 SOIL)
 
 set(INC_LST 
 		${CMAKE_SOURCE_DIR}/custom/Shader.h
-		${CMAKE_SOURCE_DIR}/custom/Camera.h)
+		${CMAKE_SOURCE_DIR}/custom/Camera.h
+		${CMAKE_SOURCE_DIR}/custom/Mesh.h
+		)
 
 set(SRC_LST ${CMAKE_SOURCE_DIR}/common/PlatformUtils.cpp
 		main.cpp
 		${CMAKE_SOURCE_DIR}/custom/Shader.cpp
         ${CMAKE_SOURCE_DIR}/custom/Camera.cpp
+        ${CMAKE_SOURCE_DIR}/custom/Mesh.cpp
 		)
 add_executable(landscape ${SRC_LST} ${INC_LST})
 

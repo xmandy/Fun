@@ -14,6 +14,7 @@ class Shader
 		GLuint Program;
         GLuint CreateShader(const GLchar* path, GLuint shader_type);
 		Shader(const GLchar* vertexPath, const GLchar* fragmentPath, const GLchar* geometryPath=NULL);
+		Shader(const std::string &vertexPath, const std::string &fragPath, const std::string geoPath="");
 		void Use();
 };
 #endif

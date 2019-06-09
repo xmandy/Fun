@@ -50,12 +50,16 @@ GLuint Shader::CreateShader(const GLchar *path, GLuint shader_type)
     return shaderID;
 }
 
+Shader::Shader(const std::string &vertexPath, const std::string &fragPath, const std::string geoPath)
+{
+	Shader(vertexPath.c_str(), fragPath.c_str(), geoPath.c_str());
+}
 Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath, const GLchar* geometryPath)
 {
 //	std::string vertexCode;
 //	std::string fragmentCode;
 //
-//	std::ifstream vShaderFile;
+//	;std::ifstream vShaderFile;
 //	std::ifstream fShaderFile;
 //
 //	vShaderFile.exceptions (std::ifstream::badbit);

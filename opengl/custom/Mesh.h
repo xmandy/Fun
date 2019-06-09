@@ -17,7 +17,24 @@ struct Vertex
 	glm::vec3 Position;
 	glm::vec3 Normal;
 	glm::vec2 TexCoords;
+	Vertex(GLfloat PosX, GLfloat PosY, GLfloat PosZ,
+		GLfloat NormalX, GLfloat NormalY, GLfloat NormalZ,
+		GLfloat TexX, GLfloat TexY)
+	{
+		Position.x = PosX;
+		Position.y = PosY;
+		Position.z = PosZ;
+		Normal.x = NormalX;
+		Normal.y = NormalY;
+		Normal.z = NormalZ;
+		TexCoords.x = TexX;
+		TexCoords.y = TexY;
+	}
 
+	friend std::ostream& operator<<(std::ostream &os, Vertex &v)
+	{
+		return os << "(" << v.Position.x << ", " << v.Position.y << ", " << v.Position.z << ")" << std::endl;
+	}
 };
 
 struct Texture 
