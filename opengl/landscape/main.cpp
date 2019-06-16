@@ -10,6 +10,8 @@
 #include "gtc/type_ptr.hpp"
 #include "PlatformUtils.h"
 #include "Camera.h"
+#include "landscape.h"
+
 
 int ScreenWidth = 640;
 int ScreenHeight = 480;
@@ -119,6 +121,14 @@ int main(int argc, char **argv)
     int width,height;
     glfwGetFramebufferSize(window, &width, &height);
     glViewport(0, 0, width, height);
+
+	// Landscape code starts here
+	Landscape landscape_obj = Landscape(common::GetTexturePath("landscape/terrain_01.jpg"),
+		BDT::Size(500, 500), 100, common::GetShaderPath("cylinder.vs"),
+		common::GetShaderPath("cylinder.ps")
+	);
+	landscape_obj.Prepare();
+	return 0;
     
     // Use shader class
     Shader outShader(common::GetShaderPath("cylinder.vs"), common::GetShaderPath("cylinder.ps"));

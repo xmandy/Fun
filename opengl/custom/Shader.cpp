@@ -7,7 +7,15 @@ GLuint Shader::CreateShader(const GLchar *path, GLuint shader_type)
     std::string code;
     
     std::ifstream shaderFile;
+	std::string prefix;
     shaderFile.exceptions(std::ifstream::badbit);
+	if (shader_type == GL_GEOMETRY_SHADER)
+		prefix = "Geometry Shader: ";
+	else if (shader_type == GL_VERTEX_SHADER)
+		prefix = "Vertex Shader: ";
+	else
+		prefix = "Fragement Shader: ";
+
     
     try {
         shaderFile.open(path);
@@ -28,10 +36,10 @@ GLuint Shader::CreateShader(const GLchar *path, GLuint shader_type)
     }
     
     const GLchar *shaderCode = code.c_str();
-    
-    std::cout<< "shader code" << std::endl;
+	
+    std::cout<< std::endl<< "*************** " << prefix << " ***************" << std::endl;
     std::cout<< shaderCode << std::endl;
-    std::cout<<"==============="<< std::endl;
+    std::cout<<"******************************************"<< std::endl << std::endl;
 //    std::cout << shaderCode << std::endl;
     
     GLuint shaderID;
@@ -52,7 +60,9 @@ GLuint Shader::CreateShader(const GLchar *path, GLuint shader_type)
 
 Shader::Shader(const std::string &vertexPath, const std::string &fragPath, const std::string geoPath)
 {
-	Shader(vertexPath.c_str(), fragPath.c_str(), geoPath.c_str());
+	Shader(vertexPath == "" ? NULL : vertexPath.c_str(), 
+		fragPath == "" ? NULL : fragPath.c_str(), 
+		geoPath == "" ? NULL : geoPath.c_str());
 }
 Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath, const GLchar* geometryPath)
 {

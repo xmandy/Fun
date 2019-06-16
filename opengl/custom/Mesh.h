@@ -12,6 +12,7 @@
 
 
 
+#ifndef VERTEX_STRUCT
 struct Vertex
 {
 	glm::vec3 Position;
@@ -36,6 +37,8 @@ struct Vertex
 		return os << "(" << v.Position.x << ", " << v.Position.y << ", " << v.Position.z << ")" << std::endl;
 	}
 };
+#define VERTEX_STRUCT
+#endif
 
 struct Texture 
 {

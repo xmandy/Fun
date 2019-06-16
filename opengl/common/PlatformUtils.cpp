@@ -1,12 +1,19 @@
 #include "PlatformUtils.h"
 
-// ¶¨ÒåÆ½Ì¨Ïà¹ØµÄÒ»Ð©²ÎÊý
+// ï¿½ï¿½ï¿½ï¿½Æ½Ì¨ï¿½ï¿½Øµï¿½Ò»Ð©ï¿½ï¿½ï¿½ï¿½
 namespace common {
 
 void GetTexturePath(std::string &path, const char* filename)
 {
 	path.assign(TEXTURE_PATH);
 	path.append(filename);
+}
+
+std::string GetTexturePath(const char* filename)
+{
+	std::string path(TEXTURE_PATH);
+	path.append(filename);
+	return path;
 }
 
 void GetShaderPath(std::string &path, const char* filename)
