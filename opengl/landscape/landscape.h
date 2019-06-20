@@ -10,21 +10,23 @@
 class Landscape
 {
 public:
-	Landscape(std::string& imagePath, BDT::Size &size, int height, std::string& vsPath, std::string& psPath);
+	Landscape(std::string& ImagePath, BDT::Size &Size, int Height, std::string& VsPath, std::string& PsPath);
 
 	bool Prepare();
 
+	glm::vec3 GetVertexPosition(int X, int Z, const unsigned char *ImageData, int ImageWidth, int ImageHeight);
+
 private:
-	std::string heigtMapImagePath;
-	std::string vsPath;
-	std::string psPath;
+	std::string HeigtMapImagePath;
+	std::string VsPath;
+	std::string PsPath;
 
-	Shader geoShader;
+	Shader GeoShader;
 
-	int geoHeight;
-	BDT::Size geoSize;
+	int GeoHeight;
+	BDT::Size GeoSize;
 
-	std::vector<BDT::Vertex> mVertices;
+	std::vector<BDT::Vertex> Vertices;
 
 };
 

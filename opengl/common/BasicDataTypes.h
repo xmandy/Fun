@@ -24,6 +24,20 @@ namespace BDT{
 			TexCoords.x = TexX;
 			TexCoords.y = TexY;
 		}
+		Vertex()
+		{
+			Position = glm::vec3(0, 0, 0);
+			Normal = glm::vec3(0, 0, 1);
+			TexCoords = glm::vec2(0, 0);
+		}
+
+
+		Vertex(glm::vec3 &Pos)
+		{
+			Position = Pos;
+			Normal = glm::vec3(0, 0, 1);
+			TexCoords = glm::vec2(0, 0);
+		}
 
 		friend std::ostream& operator<<(std::ostream &os, Vertex &v)
 		{
@@ -32,16 +46,16 @@ namespace BDT{
 	};
 
 	struct Size {
-		int x;
-		int y;
-		Size(int _x, int _y)
+		int X;
+		int Y;
+		Size(int _X, int _Y)
 		{
-			x = _x;
-			y = _y;
+			X = _X;
+			Y = _Y;
 		}
-		friend std::ostream& operator<<(std::ostream &os, Size &size)
+		friend std::ostream& operator<<(std::ostream &Os, Size &ThisSize)
 		{
-			return os << "Size: (" << size.x << " " << size.y << ")" << std::endl;
+			return Os << "Size: (" << ThisSize.X << " " << ThisSize.Y << ")" << std::endl;
 		}
 	};
 }

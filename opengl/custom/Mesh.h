@@ -32,6 +32,14 @@ struct Vertex
 		TexCoords.y = TexY;
 	}
 
+	Vertex()
+	{
+		Position = glm::vec3(0, 0, 0);
+		Normal = glm::vec3(0, 0, 1);
+		TexCoords = glm::vec2(0, 0);
+	}
+
+
 	friend std::ostream& operator<<(std::ostream &os, Vertex &v)
 	{
 		return os << "(" << v.Position.x << ", " << v.Position.y << ", " << v.Position.z << ")" << std::endl;
