@@ -4,7 +4,7 @@
 #include <string>
 
 
-// ¶¨ÒåÆ½Ì¨Ïà¹ØµÄÒ»Ð©²ÎÊý
+// ï¿½ï¿½ï¿½ï¿½Æ½Ì¨ï¿½ï¿½Øµï¿½Ò»Ð©ï¿½ï¿½ï¿½ï¿½
 namespace common {
 
 #cmakedefine ASSET_ROOT "@ASSET_ROOT@"
@@ -14,9 +14,12 @@ namespace common {
 #define MODEL_PATH "@ASSET_ROOT@/models/"
 
 	void GetTexturePath(std::string &path, const char* filename);
+	std::string GetTexturePath(const char* filename);
+
 
 
 	void GetShaderPath(std::string &path, const char* filename);
+	std::string GetShaderPath(const char* filename);
 
 	std::string GetModelDir(const char *modelName);
 	

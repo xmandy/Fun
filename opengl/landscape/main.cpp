@@ -11,10 +11,11 @@
 #include "PlatformUtils.h"
 #include "Camera.h"
 #include "landscape.h"
+#include "Mesh.h"
 
 
-int ScreenWidth = 640;
-int ScreenHeight = 480;
+int ScreenWidth = 1280;
+int ScreenHeight = 960;
 
 GLfloat deltaTime = 0.0f;
 GLfloat lastFrame = 0.0f;
@@ -123,16 +124,7 @@ int main(int argc, char **argv)
     glViewport(0, 0, width, height);
 
 	// Landscape code starts here
-	Landscape landscape_obj = Landscape(common::GetTexturePath("landscape/terrain_01.jpg"),
-		BDT::Size(500, 500), 100, common::GetShaderPath("cylinder.vs"),
-		common::GetShaderPath("cylinder.ps")
-	);
-	landscape_obj.Prepare();
-	return 0;
-    
-    // Use shader class
-    Shader outShader(common::GetShaderPath("cylinder.vs"), common::GetShaderPath("cylinder.ps"));
-    
+   
     // create texures
     int tWidth, tHeight;
     
@@ -165,44 +157,80 @@ int main(int argc, char **argv)
    
 	std::cout << "111" << camera.Front.x << " " << camera.Front.y << " " << camera.Front.z << std::endl;
 
+	Mesh mesh;
 
     glEnable(GL_DEPTH_TEST);
+	//glEnable(GL_CULL_FACE);
+
+ 	std::string cyvs_path = common::GetShaderPath("cylinder.vs");
+	std::string cyps_path = common::GetShaderPath("cylinder.ps");
+
+	Shader cylinderShader(cyvs_path.c_str(), cyps_path.c_str());
+
+	Landscape landscape_obj(common::GetTexturePath("landscape/terrain_01.jpg"),
+		BDT::Size(500, 500), 10, common::GetShaderPath("cylinder.vs"),
+		common::GetShaderPath("cylinder.ps")
+	);
+	landscape_obj.SetUp();
    
-    while (!glfwWindowShouldClose(window)) {
+	while (!glfwWindowShouldClose(window)) {
 		GLfloat current = glfwGetTime();
 		deltaTime = current - lastFrame;
 		lastFrame = current;
 
-        glfwPollEvents();
+		glfwPollEvents();
 		DoCameraMovements();
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        
-        // bind textures
-        
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, textures[0]);
-        glUniform1i(glGetUniformLocation(outShader.Program,"texture0"), 0);
-        
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, textures[1]);
-        glUniform1i(glGetUniformLocation(outShader.Program,"texture1"), 1);
-        
-        outShader.Use();
-        
-		GLint modelLoc = glGetUniformLocation(outShader.Program, "model");
-		GLint viewLoc = glGetUniformLocation(outShader.Program, "view");
-		GLint projectLoc = glGetUniformLocation(outShader.Program, "projection");
-        glm::mat4 view;
+		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		// bind textures
+/*
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, textures[0]);
+		glUniform1i(glGetUniformLocation(outShader.Program,"texture0"), 0);
+
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, textures[1]);
+		glUniform1i(glGetUniformLocation(outShader.Program,"texture1"), 1);
+		*/
+
+
+		glm::mat4 view;
 		view = camera.GetViewMatrix();
 		glm::mat4 projection = camera.GetProjectionMatrix();
 
-		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-		glUniformMatrix4fv(projectLoc, 1, GL_FALSE, glm::value_ptr(projection));
+		glm::mat4 model;
+
+		if (0)
+		{
+			cylinderShader.Use();
+			GLint modelLoc = glGetUniformLocation(cylinderShader.Program, "model");
+			GLint viewLoc = glGetUniformLocation(cylinderShader.Program, "view");
+			GLint projectLoc = glGetUniformLocation(cylinderShader.Program, "projection");
+			glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+			glUniformMatrix4fv(projectLoc, 1, GL_FALSE, glm::value_ptr(projection));
+			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		}
+		else
+		{
+
+			//Shader &GeoShader = landscape_obj.GeoShader;
+			landscape_obj.GeoShader.Use();
+
+			GLuint modelLoc1 = glGetUniformLocation(landscape_obj.GeoShader.Program, "model");
+			GLuint viewLoc1 = glGetUniformLocation(landscape_obj.GeoShader.Program, "view");
+			GLuint projlLoc1 = glGetUniformLocation(landscape_obj.GeoShader.Program, "projection");
+
+			glUniformMatrix4fv(viewLoc1, 1, GL_FALSE, glm::value_ptr(view));
+			glUniformMatrix4fv(projlLoc1, 1, GL_FALSE, glm::value_ptr(projection));
+			glUniformMatrix4fv(modelLoc1, 1, GL_FALSE, glm::value_ptr(model));
+
+		}
+
+
+		landscape_obj.Draw(model, view, projection);
+		mesh.DrawTest(landscape_obj.GeoShader);
 		
-		glBindVertexArray(0);
-        
-        
         glfwSwapBuffers(window);
     }
     

@@ -1,6 +1,5 @@
 #include "PlatformUtils.h"
 
-// ����ƽ̨��ص�һЩ����
 namespace common {
 
 void GetTexturePath(std::string &path, const char* filename)

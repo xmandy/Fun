@@ -11,6 +11,7 @@
 #include "PlatformUtils.h"
 #include "Camera.h"
 #include <vector>
+#include "Mesh.h"
 
 int ScreenWidth = 640;
 int ScreenHeight = 480;
@@ -74,31 +75,6 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 	camera.ProcessMouseMovement(xoffset, yoffset);
 }
 
-struct Vertex
-{
-	glm::vec3 Position;
-	glm::vec3 Normal;
-	glm::vec2 TexCoords;
-	Vertex(GLfloat PosX, GLfloat PosY, GLfloat PosZ,
-		GLfloat NormalX, GLfloat NormalY, GLfloat NormalZ,
-		GLfloat TexX, GLfloat TexY)
-	{
-		Position.x = PosX;
-		Position.y = PosY;
-		Position.z = PosZ;
-		Normal.x = NormalX;
-		Normal.y = NormalY;
-		Normal.z = NormalZ;
-		TexCoords.x = TexX;
-		TexCoords.y = TexY;
-	}
-
-	friend std::ostream& operator<<(std::ostream &os, Vertex &v)
-	{
-		return os << "(" << v.Position.x << ", " << v.Position.y << ", " << v.Position.z << ")" << std::endl;
-	}
-};
-
 int main(int argc, char **argv)
 {
     
@@ -145,146 +121,7 @@ int main(int argc, char **argv)
     glfwGetFramebufferSize(window, &width, &height);
     glViewport(0, 0, width, height);
     
-    // Use shader class
-	std::string vs_path;
-	std::string ps_path;
-	common::GetShaderPath(vs_path, "3d.vs");
-	common::GetShaderPath(ps_path, "texture_learn.ps");
-    Shader outShader(vs_path.c_str(), ps_path.c_str());
-    
-    // create texures
-    int tWidth, tHeight;
-    
-    int texture_length = 2;
-    
-    GLuint *textures = new GLuint[texture_length];
-    glGenTextures(texture_length, textures);
-
-    for (int i = 0; i < texture_length; ++i) {
-        glBindTexture(GL_TEXTURE_2D, textures[i]);
-        // set texture wrapping mode
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        
-        // set texture filtering mode
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-		std::string path;
-		common::GetTexturePath(path, texture_file[i]);
-        
-        unsigned char *image = SOIL_load_image(path.c_str(), &tWidth, &tHeight, 0, SOIL_LOAD_RGB);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, tWidth, tHeight, 0, GL_RGB,
-                     GL_UNSIGNED_BYTE, image);
-        glGenerateMipmap(GL_TEXTURE_2D);
-        SOIL_free_image_data(image);
-        glBindTexture(GL_TEXTURE_2D, 0);
-    }
-    
    
-//    GLfloat vertices[] = {
-//        // Positions            // colors               // uvs
-//        0.5f, 0.5f, 0.0f,       1.0f, 0.0f, 0.0f,       1.0f, 1.0f,
-//        0.5f, -0.5f, 0.0f,      0.0f, 1.0f, 0.0f,       1.0f, 0.0f,
-//        -0.5f, -0.5f, 0.0f,     0.0f, 0.0f, 1.0f,       0.0f, 0.0f,
-//        -0.5f, 0.5f, 0.0f,      0.0f, 0.0f, 0.0f,       0.0f, 1.0f,
-//    };
-//    GLuint indices[] = {
-//        0, 1, 3,
-//        1, 2, 3,
-//    };
-    GLfloat vertices[] = {
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-        0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-        
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-    };
-
-	glm::vec3 cubePositions[] = {
-		glm::vec3(0.0f, 0.0f, 0.0f),
-		glm::vec3(2.0f, 5.0f, -15.0f),
-		glm::vec3(-1.5f, -2.2f, -2.5f),
-		glm::vec3(-3.8f, -2.0f, -12.3f),
-		glm::vec3(2.4f, -0.4f, -3.5f),
-		glm::vec3(-1.7f, 3.0f, -7.5f),
-		glm::vec3(1.3f, -2.0f, -2.5f),
-		glm::vec3(1.5f, 2.0f, -2.5f),
-		glm::vec3(1.5f, 0.2f, -1.5f),
-		glm::vec3(-1.3f, 1.0f, -1.5f)
-	};
-
-    GLuint VBO, VAO, EBO;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-//    glGenBuffers(1, &EBO);
-    
-    // bind the array first and then bind other buffer
-    glBindVertexArray(VAO);
-    
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    
-//    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-//    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-    
-    // position attribution in vs shader
-    // stride = 0 let opengl decide the stride, but usually we carefully set it by ourself
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
-    glEnableVertexAttribArray(0);
-    
-    // color attribution in vs shader
-//    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3*sizeof(GLfloat)));
-//    glEnableVertexAttribArray(1);
-    
-    // uv attribution in vs shader
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3*sizeof(GLfloat)));
-    glEnableVertexAttribArray(2);
-    
-    
-    // Note that this is allowed, the call to glVertexAttribPointer registered VBO as the currently bound vertex buffer object so afterwards we can safely unbind
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    
-    glBindVertexArray(0);
-
-	std::cout << "111" << camera.Front.x << " " << camera.Front.y << " " << camera.Front.z << std::endl;
-
 	/******set up cylinder vertices******/
 	std::vector<Vertex> TopVertices;
 	std::vector<Vertex> BottomVertices;
@@ -399,6 +236,7 @@ int main(int argc, char **argv)
 	
     glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
+	Mesh mesh;
    
     while (!glfwWindowShouldClose(window)) {
 		GLfloat current = glfwGetTime();
@@ -427,17 +265,20 @@ int main(int argc, char **argv)
 		//model = glm::rotate(model, (GLfloat)glfwGetTime()*0.5f, glm::vec3(0.0f, 0.0f, 1.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 
+		/*
 		glBindVertexArray(TopVAO);
 		glDrawArrays(GL_TRIANGLE_FAN, 0, TopVertices.size());
 		glBindVertexArray(0);
 	
-		//glBindVertexArray(SideVAO);
-		//glDrawArrays(GL_TRIANGLE_STRIP, 0, SideVertices.size());
-		//glBindVertexArray(0);
+		glBindVertexArray(SideVAO);
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, SideVertices.size());
+		glBindVertexArray(0);
 
 		glBindVertexArray(BottomVAO);
 		glDrawArrays(GL_TRIANGLE_FAN, 0, BottomVertices.size());
 		glBindVertexArray(0);
+		*/
+		mesh.DrawTest(cylinderShader);
 
         // bind textures
 		/*
@@ -483,11 +324,11 @@ int main(int argc, char **argv)
         glfwSwapBuffers(window);
     }
     
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
+    //glDeleteVertexArrays(1, &VAO);
+    //glDeleteBuffers(1, &VBO);
 //    glDeleteBuffers(1, &EBO);
     
-    delete [] textures;
+    //delete [] textures;
     
     glfwTerminate();
 	return 0;

@@ -29,10 +29,12 @@ set(EXTRA_LIBS ${EXTRA_LIBS} glew glfw3 SOIL)
 
 set(INC_LST 
 		${CMAKE_SOURCE_DIR}/custom/Shader.h
+		${CMAKE_SOURCE_DIR}/custom/Mesh.h
 		${CMAKE_SOURCE_DIR}/custom/Camera.h)
 
 set(SRC_LST ${CMAKE_SOURCE_DIR}/common/PlatformUtils.cpp
 		main.cpp
+        ${CMAKE_SOURCE_DIR}/custom/Mesh.cpp
 		${CMAKE_SOURCE_DIR}/custom/Shader.cpp
         ${CMAKE_SOURCE_DIR}/custom/Camera.cpp
 		)

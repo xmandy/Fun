@@ -3,3 +3,4 @@
 boost/build*
 .vscode
 *.pyc
+.idea

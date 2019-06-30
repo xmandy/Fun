@@ -2,10 +2,71 @@
 
 Mesh::Mesh(std::vector<Vertex> &vertices, std::vector<unsigned int> &indices, std::vector<Texture> &textures)
 {
+	mTest = false;
 	this->vertices = vertices;
 	this->indices = indices;
 	this->textures = textures;
     setupMesh();
+}
+
+Mesh::Mesh()
+{
+	mTest = true;
+
+	GLint SideCount = 36;
+	const float PI = 3.1415926535897932384626433832795;
+	float HalfHight = 0.5f;
+
+	for (int i = 0; i <= SideCount; ++i)
+	{
+		// gen top mesh
+		GLfloat angle = i * PI * 2 / SideCount;
+		//BDT::Vertex vertex(cos(angle), HalfHight, sin(angle), 0.0f, 1.0f, 0.0f,
+		//	(cos(angle) + 1) / 2.0, (sin(angle) / 2.0));
+		//TopVertices.push_back(vertex);
+
+		// gen middle rectangle
+		BDT::Vertex vertexDown(cos(angle), -HalfHight, sin(angle), cos(angle), 0, sin(angle),
+			i / (float)SideCount, 0.0f);
+		BDT::Vertex vertexUp(cos(angle), HalfHight, sin(angle), cos(angle), 0, sin(angle),
+			i / (float)SideCount, 1.0f);
+
+		//std::cout << vertexDown << vertexUp;
+		mSideVertices.push_back(vertexDown);
+		mSideVertices.push_back(vertexUp);
+
+		// gen bottom mesh
+		//angle = -angle;
+		//BDT::Vertex bvertex(cos(angle), -HalfHight, sin(angle), 0.0f, 0.0f, 1.0f,
+		//	(cos(angle) + 1) / 2.0, (sin(angle) / 2.0));
+		//BottomVertices.push_back(bvertex);
+
+	}
+
+	glGenVertexArrays(1, &mTestVAO);
+	glGenBuffers(1, &mTestVBO);
+
+	glBindVertexArray(mTestVAO);
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
+
+	glBindBuffer(GL_ARRAY_BUFFER, mTestVBO);
+	glBufferData(GL_ARRAY_BUFFER, mSideVertices.size() * sizeof(BDT::Vertex), &mSideVertices[0], GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(BDT::Vertex), (void*)0);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(BDT::Vertex), (void*)offsetof(BDT::Vertex, Normal));
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(BDT::Vertex), (void*)offsetof(BDT::Vertex, TexCoords));
+	glBindVertexArray(0);
+
+
+}
+
+void Mesh::DrawTest(Shader &shader)
+{
+	glBindVertexArray(mTestVAO);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, mSideVertices.size());
+	glBindVertexArray(0);
 }
 
 void Mesh::setupMesh()

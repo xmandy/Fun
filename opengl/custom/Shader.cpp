@@ -3,7 +3,7 @@
 GLuint Shader::CreateShader(const GLchar *path, GLuint shader_type)
 {
     if (path == NULL)
-        return -1;
+        return 0;
     std::string code;
     
     std::ifstream shaderFile;
@@ -26,13 +26,13 @@ GLuint Shader::CreateShader(const GLchar *path, GLuint shader_type)
         code = stringStream.str();
     } catch (std::ifstream::failure e) {
         std::cout<< "ERROR: SHADER file read fail!" << path << std::endl;
-        return -1;
+        return 0;
     }
     
     if (code.length() == 0)
     {
         std::cout << "Shader path: " << path << " may be wrong!" << std::endl;
-        return -1;
+        return 0;
     }
     
     const GLchar *shaderCode = code.c_str();
@@ -53,10 +53,16 @@ GLuint Shader::CreateShader(const GLchar *path, GLuint shader_type)
         GLchar infoLog[512];
         glGetShaderInfoLog(shaderID, 512, NULL, infoLog);
         std::cout<< "ERROR compile shader source!" << path << "----" << infoLog << std::endl;
-        return -1;
+        return 0;
     }
     return shaderID;
 }
+
+Shader::Shader()
+{
+	std::cout << "kkkkkkkkkkkkkkkkkkkkkkkk" << std::endl;
+}
+
 
 Shader::Shader(const std::string &vertexPath, const std::string &fragPath, const std::string geoPath)
 {
@@ -130,6 +136,7 @@ void Shader::Initialize(const GLchar* vertexPath, const GLchar* fragmentPath, co
 //        std::cout << "ERROR.. compile fragment shader: " << infoLog << std::endl;
 //    }
 //
+	Program = 0;
     GLuint vertex = CreateShader(vertexPath, GL_VERTEX_SHADER);
     GLuint fragment = CreateShader(fragmentPath, GL_FRAGMENT_SHADER);
     GLuint geometry = CreateShader(geometryPath, GL_GEOMETRY_SHADER);
@@ -157,6 +164,8 @@ void Shader::Initialize(const GLchar* vertexPath, const GLchar* fragmentPath, co
         glDeleteShader(fragment);
     if (geometry > 0)
         glDeleteShader(geometry);
+
+	std::cout << "22222222222 " << this << " " <<  Program << std::endl;
 }
 
 void Shader::Use()

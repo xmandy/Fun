@@ -9,6 +9,7 @@
 #include <iostream>
 #include <sstream>
 #include <glm.hpp>
+#include "BasicDataTypes.h"
 
 
 
@@ -63,11 +64,20 @@ public:
     std::vector<Texture> textures;
 
     Mesh(std::vector<Vertex> &vertices, std::vector<unsigned int> &indices, std::vector<Texture> &textures);
+
+	Mesh();
 	void Draw(Shader &shader);
+	void DrawTest(Shader &shader);
+
+
 
 private:
 	void setupMesh();
 	GLuint mVAO, mVBO, mEBO;
+
+	bool mTest;
+	GLuint mTestVAO, mTestVBO;
+	std::vector<BDT::Vertex> mSideVertices;
 };
 
 
