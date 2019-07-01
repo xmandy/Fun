@@ -7,7 +7,7 @@ Landscape::Landscape(std::string& ImagePath, BDT::Size &Size, int height, std::s
 	HeigtMapImagePath(ImagePath), GeoSize(Size), GeoHeight(height), VsPath(VsPath), PsPath(PsPath),
 	GeoShader(VsPath, PsPath)
 {
-	std::cout << "111111111111111111 " << &GeoShader << " " << GeoShader.Program << std::endl;
+	std::cout << "111111111111111111 " << &GeoShader << " " << GeoShader.Program << " aa " << GeoShader.mVsPath << std::endl;
 
 }
 
