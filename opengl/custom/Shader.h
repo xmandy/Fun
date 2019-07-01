@@ -16,5 +16,7 @@ class Shader
 		Shader(const GLchar* vertexPath, const GLchar* fragmentPath, const GLchar* geometryPath=NULL);
 		Shader(const std::string &vertexPath, const std::string &fragPath, const std::string geoPath="");
 		void Use();
+private:
+	void Initialize(const GLchar* vertexPath, const GLchar* fragmentPath, const GLchar* geometryPath = NULL);
 };
 #endif

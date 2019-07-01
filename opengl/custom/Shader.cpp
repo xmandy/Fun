@@ -60,11 +60,17 @@ GLuint Shader::CreateShader(const GLchar *path, GLuint shader_type)
 
 Shader::Shader(const std::string &vertexPath, const std::string &fragPath, const std::string geoPath)
 {
-	Shader(vertexPath == "" ? NULL : vertexPath.c_str(), 
+	Initialize(vertexPath == "" ? NULL : vertexPath.c_str(), 
 		fragPath == "" ? NULL : fragPath.c_str(), 
 		geoPath == "" ? NULL : geoPath.c_str());
 }
+
 Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath, const GLchar* geometryPath)
+{
+	Initialize(vertexPath, fragmentPath, geometryPath);
+}
+
+void Shader::Initialize(const GLchar* vertexPath, const GLchar* fragmentPath, const GLchar* geometryPath)
 {
 //	std::string vertexCode;
 //	std::string fragmentCode;
@@ -128,6 +134,7 @@ Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath, const GLcha
     GLuint fragment = CreateShader(fragmentPath, GL_FRAGMENT_SHADER);
     GLuint geometry = CreateShader(geometryPath, GL_GEOMETRY_SHADER);
     Program = glCreateProgram();
+	std::cout << "11111111111111 " << this << " " << Program << std::endl;
     if (vertex > 0)
         glAttachShader(Program, vertex);
     if (fragment > 0)
