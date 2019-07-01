@@ -17,10 +17,11 @@ class Shader
 		Shader(const std::string &vertexPath, const std::string &fragPath, const std::string geoPath="");
 		Shader();
 		void Use();
+
+		std::string VsPath;
+		std::string PsPath;
+		std::string GeoPath;
 private:
 	void Initialize(const GLchar* vertexPath, const GLchar* fragmentPath, const GLchar* geometryPath = NULL);
-		std::string mVsPath;
-		std::string mPsPath;
-		std::string mGeoPath;
 };
 #endif

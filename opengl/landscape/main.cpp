@@ -172,6 +172,12 @@ int main(int argc, char **argv)
 		common::GetShaderPath("cylinder.ps")
 	);
 	landscape_obj.SetUp();
+
+	GLfloat vertices[] = {
+		0.0f, 0.0f, 0.0f, //255.0f, 0.0f, 0.0f,
+		100.0f, 0.0f, 0.0f, //255.0f, 0.0f, 0.0f,
+	};
+	GLuint LineVAO, LineVBO;
    
 	while (!glfwWindowShouldClose(window)) {
 		GLfloat current = glfwGetTime();
@@ -180,8 +186,13 @@ int main(int argc, char **argv)
 
 		glfwPollEvents();
 		DoCameraMovements();
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		//glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glVertexPointer(3, GL_FLOAT, 0, vertices);
+		glDrawArrays(GL_LINES, 0, 2);
+		glDisableClientState(GL_VERTEX_ARRAY);
 
 		// bind textures
 /*
@@ -215,21 +226,21 @@ int main(int argc, char **argv)
 		{
 
 			//Shader &GeoShader = landscape_obj.GeoShader;
-			landscape_obj.GeoShader.Use();
+			//landscape_obj.GeoShader.Use();
 
-			GLuint modelLoc1 = glGetUniformLocation(landscape_obj.GeoShader.Program, "model");
-			GLuint viewLoc1 = glGetUniformLocation(landscape_obj.GeoShader.Program, "view");
-			GLuint projlLoc1 = glGetUniformLocation(landscape_obj.GeoShader.Program, "projection");
+			//GLuint modelLoc1 = glGetUniformLocation(landscape_obj.GeoShader.Program, "model");
+			//GLuint viewLoc1 = glGetUniformLocation(landscape_obj.GeoShader.Program, "view");
+			//GLuint projlLoc1 = glGetUniformLocation(landscape_obj.GeoShader.Program, "projection");
 
-			glUniformMatrix4fv(viewLoc1, 1, GL_FALSE, glm::value_ptr(view));
-			glUniformMatrix4fv(projlLoc1, 1, GL_FALSE, glm::value_ptr(projection));
-			glUniformMatrix4fv(modelLoc1, 1, GL_FALSE, glm::value_ptr(model));
+			//glUniformMatrix4fv(viewLoc1, 1, GL_FALSE, glm::value_ptr(view));
+			//glUniformMatrix4fv(projlLoc1, 1, GL_FALSE, glm::value_ptr(projection));
+			//glUniformMatrix4fv(modelLoc1, 1, GL_FALSE, glm::value_ptr(model));
 
 		}
 
 
 		landscape_obj.Draw(model, view, projection);
-		mesh.DrawTest(landscape_obj.GeoShader);
+		//mesh.DrawTest(landscape_obj.GeoShader);
 		
         glfwSwapBuffers(window);
     }

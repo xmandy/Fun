@@ -7,7 +7,7 @@ Landscape::Landscape(std::string& ImagePath, BDT::Size &Size, int height, std::s
 	HeigtMapImagePath(ImagePath), GeoSize(Size), GeoHeight(height), VsPath(VsPath), PsPath(PsPath),
 	GeoShader(VsPath, PsPath)
 {
-	std::cout << "111111111111111111 " << &GeoShader << " " << GeoShader.Program << " aa " << GeoShader.mVsPath << std::endl;
+	std::cout << "111111111111111111 " << &GeoShader << " " << GeoShader.Program << " aa " << GeoShader.VsPath << std::endl;
 
 }
 
@@ -22,7 +22,7 @@ glm::vec3 Landscape::GetVertexPosition(int X, int Z, const unsigned char *ImageD
 
 
 	//std::cout << int(ImageData[Offset]) << std::endl;
-	return glm::vec3(X, ImageData[Offset], Z);
+	return glm::vec3(X, ImageData[Offset] / 255.0 * GeoHeight, Z);
 
 }
 
@@ -62,10 +62,10 @@ bool Landscape::SetUp()
 	}
 
 	SOIL_free_image_data(ImageData);
-	Vertices.clear();
-	Vertices.push_back(BDT::Vertex(glm::vec3(1, 1, 0.0)));
-	Vertices.push_back(BDT::Vertex(glm::vec3(1, -1, 0.0)));
-	Vertices.push_back(BDT::Vertex(glm::vec3(-1, 1, 0.0)));
+	//Vertices.clear();
+	//Vertices.push_back(BDT::Vertex(glm::vec3(1, 1, 0.0)));
+	//Vertices.push_back(BDT::Vertex(glm::vec3(1, -1, 0.0)));
+	//Vertices.push_back(BDT::Vertex(glm::vec3(-1, 1, 0.0)));
 
 	glGenVertexArrays(1, &mVAO);
 	glGenBuffers(1, &mVBO);
@@ -95,19 +95,21 @@ bool Landscape::SetUp()
 
 void Landscape::Draw(glm::mat4 &model, glm::mat4 &view, glm::mat4 &projection)
 {
-	//GeoShader.Use();
+	GeoShader.Use();
 
-	//GLuint modelLoc = glGetUniformLocation(GeoShader.Program, "model");
-	//GLuint viewLoc = glGetUniformLocation(GeoShader.Program, "view");
-	//GLuint projlLoc = glGetUniformLocation(GeoShader.Program, "projection");
+	GLuint modelLoc = glGetUniformLocation(GeoShader.Program, "model");
+	GLuint viewLoc = glGetUniformLocation(GeoShader.Program, "view");
+	GLuint projlLoc = glGetUniformLocation(GeoShader.Program, "projection");
 
-	//glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-	//glUniformMatrix4fv(projlLoc, 1, GL_FALSE, glm::value_ptr(projection));
-	//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+	glUniformMatrix4fv(projlLoc, 1, GL_FALSE, glm::value_ptr(projection));
+	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	glBindVertexArray(mVAO);
 	glDrawArrays(GL_TRIANGLES, 0, Vertices.size());
 	glBindVertexArray(0);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 }
 

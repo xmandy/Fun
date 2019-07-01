@@ -138,11 +138,11 @@ void Shader::Initialize(const GLchar* vertexPath, const GLchar* fragmentPath, co
 //
 	Program = 0;
 	if (vertexPath)
-		mVsPath = std::string(vertexPath);
+		VsPath = std::string(vertexPath);
 	if (fragmentPath)
-		mPsPath = std::string(fragmentPath);
+		PsPath = std::string(fragmentPath);
 	if (geometryPath)
-		mGeoPath = std::string(geometryPath);
+		GeoPath = std::string(geometryPath);
 	
     GLuint vertex = CreateShader(vertexPath, GL_VERTEX_SHADER);
     GLuint fragment = CreateShader(fragmentPath, GL_FRAGMENT_SHADER);
