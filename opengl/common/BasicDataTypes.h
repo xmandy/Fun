@@ -5,6 +5,22 @@
 #include <iostream>
 
 namespace BDT{
+	struct LineVertex
+	{
+		glm::vec3 Position;
+		glm::vec3 Color;
+
+		LineVertex(glm::vec3 &Pos, glm::vec3 &Col)
+		{
+			Position = Pos;
+			Color = Col;
+		}
+		LineVertex(glm::vec3 Pos, glm::vec3 Col = glm::vec3(0, 0, 0))
+		{
+			Position = Pos;
+			Color = Col;
+		}
+	};
 
 	struct Vertex
 	{

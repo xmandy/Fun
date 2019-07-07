@@ -12,6 +12,7 @@
 #include "Camera.h"
 #include "landscape.h"
 #include "Mesh.h"
+#include "Line.h"
 
 
 int ScreenWidth = 1280;
@@ -168,16 +169,26 @@ int main(int argc, char **argv)
 	Shader cylinderShader(cyvs_path.c_str(), cyps_path.c_str());
 
 	Landscape landscape_obj(common::GetTexturePath("landscape/terrain_01.jpg"),
-		BDT::Size(500, 500), 10, common::GetShaderPath("cylinder.vs"),
+		BDT::Size(50, 50), 50, common::GetShaderPath("cylinder.vs"),
 		common::GetShaderPath("cylinder.ps")
 	);
 	landscape_obj.SetUp();
 
-	GLfloat vertices[] = {
-		0.0f, 0.0f, 0.0f, //255.0f, 0.0f, 0.0f,
-		100.0f, 0.0f, 0.0f, //255.0f, 0.0f, 0.0f,
-	};
-	GLuint LineVAO, LineVBO;
+	std::vector<BDT::LineVertex> LineVertices;
+	// x, y, z in red green blue color
+	LineVertices.push_back(BDT::LineVertex(glm::vec3(0, 0, 0), glm::vec3(255, 0, 0)));
+	LineVertices.push_back(BDT::LineVertex(glm::vec3(10, 0, 0), glm::vec3(255, 0, 0)));
+	LineVertices.push_back(BDT::LineVertex(glm::vec3(0, 0, 0), glm::vec3(0, 255, 0)));
+	LineVertices.push_back(BDT::LineVertex(glm::vec3(0, 10, 0), glm::vec3(0, 255, 0)));
+	LineVertices.push_back(BDT::LineVertex(glm::vec3(0, 0, 0), glm::vec3(0, 0, 255)));
+	LineVertices.push_back(BDT::LineVertex(glm::vec3(0, 0, 10), glm::vec3(0, 0, 255)));
+
+	Line CoordLines(LineVertices, common::GetShaderPath("line.vs"), common::GetShaderPath("default.ps"),
+		GL_LINES);
+	CoordLines.SetUp();
+
+	camera.ScreenWidth = ScreenWidth;
+	camera.ScreenHeight = ScreenHeight;
    
 	while (!glfwWindowShouldClose(window)) {
 		GLfloat current = glfwGetTime();
@@ -186,13 +197,8 @@ int main(int argc, char **argv)
 
 		glfwPollEvents();
 		DoCameraMovements();
-		//glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		glEnableClientState(GL_VERTEX_ARRAY);
-		glVertexPointer(3, GL_FLOAT, 0, vertices);
-		glDrawArrays(GL_LINES, 0, 2);
-		glDisableClientState(GL_VERTEX_ARRAY);
 
 		// bind textures
 /*
@@ -212,35 +218,8 @@ int main(int argc, char **argv)
 
 		glm::mat4 model;
 
-		if (0)
-		{
-			cylinderShader.Use();
-			GLint modelLoc = glGetUniformLocation(cylinderShader.Program, "model");
-			GLint viewLoc = glGetUniformLocation(cylinderShader.Program, "view");
-			GLint projectLoc = glGetUniformLocation(cylinderShader.Program, "projection");
-			glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-			glUniformMatrix4fv(projectLoc, 1, GL_FALSE, glm::value_ptr(projection));
-			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		}
-		else
-		{
-
-			//Shader &GeoShader = landscape_obj.GeoShader;
-			//landscape_obj.GeoShader.Use();
-
-			//GLuint modelLoc1 = glGetUniformLocation(landscape_obj.GeoShader.Program, "model");
-			//GLuint viewLoc1 = glGetUniformLocation(landscape_obj.GeoShader.Program, "view");
-			//GLuint projlLoc1 = glGetUniformLocation(landscape_obj.GeoShader.Program, "projection");
-
-			//glUniformMatrix4fv(viewLoc1, 1, GL_FALSE, glm::value_ptr(view));
-			//glUniformMatrix4fv(projlLoc1, 1, GL_FALSE, glm::value_ptr(projection));
-			//glUniformMatrix4fv(modelLoc1, 1, GL_FALSE, glm::value_ptr(model));
-
-		}
-
-
+		CoordLines.Draw(model, view, projection);
 		landscape_obj.Draw(model, view, projection);
-		//mesh.DrawTest(landscape_obj.GeoShader);
 		
         glfwSwapBuffers(window);
     }

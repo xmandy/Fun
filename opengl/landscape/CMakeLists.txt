@@ -32,12 +32,14 @@ set(INC_LST
 		${CMAKE_SOURCE_DIR}/custom/Camera.h
 		${CMAKE_SOURCE_DIR}/custom/Mesh.h
 		${CMAKE_SOURCE_DIR}/common/BasicDataTypes.h
+		${CMAKE_SOURCE_DIR}/custom/Line.h
 		landscape.h
 		)
 
 set(SRC_LST 
 		${CMAKE_SOURCE_DIR}/common/PlatformUtils.cpp
 		${CMAKE_SOURCE_DIR}/common/BasicDataTypes.cpp
+		${CMAKE_SOURCE_DIR}/custom/Line.cpp
 		main.cpp
 		landscape.cpp
 		${CMAKE_SOURCE_DIR}/custom/Shader.cpp

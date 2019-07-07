@@ -1,4 +1,5 @@
 #include "Camera.h"
+#include <iostream>
 
 
 Camera::Camera(glm::vec3 position, glm::vec3 up, GLfloat yaw, GLfloat pitch, GLint width, GLint height):
@@ -59,6 +60,7 @@ void Camera::ProcessMouseScroll(GLfloat yoffset)
         this->FieldOfView = 1.0f;
     if (this->FieldOfView >= 45.0f)
         this->FieldOfView = 45.0f;
+	std::cout << "111111111111 " << this->FieldOfView << std::endl;
 }
 
 // Processes input received from a mouse input system. Expects the offset value in both the x and y direction.

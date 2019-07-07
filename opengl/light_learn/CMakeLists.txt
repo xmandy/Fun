@@ -29,12 +29,17 @@ set(EXTRA_LIBS ${EXTRA_LIBS} glew glfw3 SOIL)
 
 set(INC_LST 
 		${CMAKE_SOURCE_DIR}/custom/Shader.h
-		${CMAKE_SOURCE_DIR}/custom/Camera.h)
+		${CMAKE_SOURCE_DIR}/custom/Line.h
+		${CMAKE_SOURCE_DIR}/custom/Camera.h
+		${CMAKE_SOURCE_DIR}/common/BasicDataTypes.h
+		)
 
 set(SRC_LST ${CMAKE_SOURCE_DIR}/common/PlatformUtils.cpp
 		main.cpp
 		${CMAKE_SOURCE_DIR}/custom/Shader.cpp
+		${CMAKE_SOURCE_DIR}/custom/Line.cpp
         ${CMAKE_SOURCE_DIR}/custom/Camera.cpp
+		${CMAKE_SOURCE_DIR}/common/BasicDataTypes.cpp
 		)
 add_executable(light_learn ${SRC_LST} ${INC_LST})
 

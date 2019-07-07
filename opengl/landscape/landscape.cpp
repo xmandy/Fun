@@ -7,7 +7,7 @@ Landscape::Landscape(std::string& ImagePath, BDT::Size &Size, int height, std::s
 	HeigtMapImagePath(ImagePath), GeoSize(Size), GeoHeight(height), VsPath(VsPath), PsPath(PsPath),
 	GeoShader(VsPath, PsPath)
 {
-	std::cout << "111111111111111111 " << &GeoShader << " " << GeoShader.Program << " aa " << GeoShader.VsPath << std::endl;
+	//std::cout << "111111111111111111 " << &GeoShader << " " << GeoShader.Program << " aa " << GeoShader.VsPath << std::endl;
 
 }
 
@@ -19,10 +19,9 @@ glm::vec3 Landscape::GetVertexPosition(int X, int Z, const unsigned char *ImageD
 	if (Offset >= ImageWidth*ImageHeight*3)
 		std::cout << X << " " << Z << " " << Offset << " " << ImageWidth * ImageHeight * 3 << std::endl;
 
-
-
-	//std::cout << int(ImageData[Offset]) << std::endl;
-	return glm::vec3(X, ImageData[Offset] / 255.0 * GeoHeight, Z);
+	//std::cout << int(ImageData[Offset] / 255.0 * GeoHeight) << std::endl;
+	return glm::vec3(X, ImageData[Offset] / 255.0 * 5, Z);
+	//return glm::vec3(X, 0, Z);
 
 }
 
