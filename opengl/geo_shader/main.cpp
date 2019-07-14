@@ -240,18 +240,18 @@ int main(int argc, char **argv)
     
     std::string v_path;
     std::string p_path;
-    common::GetShaderPath(v_path, "lamp.vs");
-    common::GetShaderPath(p_path, "lamp.ps");
+    v_path = "lamp.vs";
+    p_path = "lamp.ps";
     //Shader lamp_shader(v_path.c_str(), p_path.c_str());
     
     // Use shader class
 	std::string vs_path;
 	std::string ps_path;
 	std::string gs_path;
-//	common::GetShaderPath(vs_path, "simple_model.vs");
-	common::GetShaderPath(vs_path, "model_interface.vs");
-	common::GetShaderPath(ps_path, "simple_model.ps");
-    common::GetShaderPath(gs_path, "exploding.gs");
+//	vs_path = "simple_model.vs";
+	vs_path = "model_interface.vs";
+	ps_path = "simple_model.ps";
+    gs_path = "exploding.gs";
     Shader outShader(vs_path.c_str(), ps_path.c_str(), gs_path.c_str());
  
     glm::vec3 lightPos(1.2f, 1.0f, 2.0f);

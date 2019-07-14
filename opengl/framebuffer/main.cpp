@@ -123,14 +123,14 @@ int main(int argc, char **argv)
     // Use shader class
     std::string vs_path;
     std::string ps_path;
-    common::GetShaderPath(vs_path, "advance.vs");
-    common::GetShaderPath(ps_path, "advance.ps");
+    vs_path = "advance.vs";
+    ps_path = "advance.ps";
     Shader outShader(vs_path.c_str(), ps_path.c_str());
     
     // screen shader: postprocess
     std::string pVsPath, pPsPath;
-    common::GetShaderPath(pVsPath, "screen.vs");
-    common::GetShaderPath(pPsPath, "screen.ps");
+    pVsPath = "screen.vs";
+    pPsPath = "screen.ps";
     Shader screenShader(pVsPath.c_str(), pPsPath.c_str());
     
     // create texures

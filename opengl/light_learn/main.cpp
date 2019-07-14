@@ -301,15 +301,15 @@ int main(int argc, char **argv)
     
     std::string v_path;
     std::string p_path;
-    common::GetShaderPath(v_path, "lamp.vs");
-    common::GetShaderPath(p_path, "lamp.ps");
+    v_path = "lamp.vs";
+    p_path = "lamp.ps";
     Shader lamp_shader(v_path.c_str(), p_path.c_str());
     
     // Use shader class
 	std::string vs_path;
 	std::string ps_path;
-	common::GetShaderPath(vs_path, "light.vs");
-	common::GetShaderPath(ps_path, "light.ps");
+	vs_path = "light.vs";
+	ps_path = "light.ps";
     Shader outShader(vs_path.c_str(), ps_path.c_str());
  
     glm::vec3 lightPos(1.2f, 1.0f, 2.0f);

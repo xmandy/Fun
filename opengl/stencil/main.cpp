@@ -119,12 +119,12 @@ int main(int argc, char **argv)
     // Use shader class
 	std::string vs_path;
 	std::string ps_path;
-	common::GetShaderPath(vs_path, "advance.vs");
-	common::GetShaderPath(ps_path, "advance.ps");
+	vs_path = "advance.vs";
+	ps_path = "advance.ps";
     Shader outShader(vs_path.c_str(), ps_path.c_str());
 
 	std::string outline_ps_path;
-	common::GetShaderPath(outline_ps_path, "lamp.ps");
+	outline_ps_path = "lamp.ps";
 	Shader outlineShader(vs_path.c_str(), outline_ps_path.c_str());
     
     // create texures

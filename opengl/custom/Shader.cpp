@@ -1,8 +1,9 @@
 #include "Shader.h"
+#include "../common/PlatformUtils.h"
 
-GLuint Shader::CreateShader(const GLchar *path, GLuint shader_type)
+GLuint Shader::CreateShader(const std::string path, GLuint shader_type)
 {
-    if (path == NULL)
+    if (path.empty())
         return 0;
     std::string code;
     
@@ -66,18 +67,19 @@ Shader::Shader()
 
 Shader::Shader(const std::string &vertexPath, const std::string &fragPath, const std::string geoPath)
 {
-	Initialize(vertexPath == "" ? NULL : vertexPath.c_str(), 
-		fragPath == "" ? NULL : fragPath.c_str(), 
-		geoPath == "" ? NULL : geoPath.c_str());
+		Initialize(vertexPath, fragPath, geoPath);
 }
 
 Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath, const GLchar* geometryPath)
 {
-	Initialize(vertexPath, fragmentPath, geometryPath);
+	Initialize(vertexPath == NULL ? std::string(""): std::string(vertexPath),
+		fragmentPath == NULL ? std::string(""): std::string(fragmentPath),
+		geometryPath == NULL ? std::string(""): std::string(geometryPath));
 }
 
-void Shader::Initialize(const GLchar* vertexPath, const GLchar* fragmentPath, const GLchar* geometryPath)
+void Shader::Initialize(const std::string vertexPath, const std::string fragmentPath, const std::string geometryPath)
 {
+
 //	std::string vertexCode;
 //	std::string fragmentCode;
 //
@@ -137,16 +139,22 @@ void Shader::Initialize(const GLchar* vertexPath, const GLchar* fragmentPath, co
 //    }
 //
 	Program = 0;
-	if (vertexPath)
-		VsPath = std::string(vertexPath);
-	if (fragmentPath)
-		PsPath = std::string(fragmentPath);
-	if (geometryPath)
-		GeoPath = std::string(geometryPath);
+	if (!vertexPath.empty())
+		VsPath = common::GetShaderPath(vertexPath.c_str());
+	else
+		VsPath = "";
+	if (!fragmentPath.empty())
+		PsPath = common::GetShaderPath(fragmentPath.c_str());
+	else
+		PsPath = "";
+	if (!geometryPath.empty())
+		GeoPath = common::GetShaderPath(geometryPath.c_str());
+	else
+		GeoPath = "";
 	
-    GLuint vertex = CreateShader(vertexPath, GL_VERTEX_SHADER);
-    GLuint fragment = CreateShader(fragmentPath, GL_FRAGMENT_SHADER);
-    GLuint geometry = CreateShader(geometryPath, GL_GEOMETRY_SHADER);
+    GLuint vertex = CreateShader(VsPath, GL_VERTEX_SHADER);
+    GLuint fragment = CreateShader(PsPath, GL_FRAGMENT_SHADER);
+    GLuint geometry = CreateShader(GeoPath, GL_GEOMETRY_SHADER);
     Program = glCreateProgram();
 	std::cout << "11111111111111 " << this << " " << Program << std::endl;
     if (vertex > 0)

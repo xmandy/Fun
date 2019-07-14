@@ -12,7 +12,7 @@ class Shader
 {
 	public:
 		GLuint Program;
-        GLuint CreateShader(const GLchar* path, GLuint shader_type);
+        GLuint CreateShader(const std::string path, GLuint shader_type);
 		Shader(const GLchar* vertexPath, const GLchar* fragmentPath, const GLchar* geometryPath=NULL);
 		Shader(const std::string &vertexPath, const std::string &fragPath, const std::string geoPath="");
 		Shader();
@@ -22,6 +22,6 @@ class Shader
 		std::string PsPath;
 		std::string GeoPath;
 private:
-	void Initialize(const GLchar* vertexPath, const GLchar* fragmentPath, const GLchar* geometryPath = NULL);
+	void Initialize(const std::string vertexPath, const std::string fragmentPath, const std::string geometryPath = "");
 };
 #endif

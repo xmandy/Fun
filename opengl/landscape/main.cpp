@@ -163,14 +163,14 @@ int main(int argc, char **argv)
     glEnable(GL_DEPTH_TEST);
 	//glEnable(GL_CULL_FACE);
 
- 	std::string cyvs_path = common::GetShaderPath("cylinder.vs");
-	std::string cyps_path = common::GetShaderPath("cylinder.ps");
+ 	std::string cyvs_path = "cylinder.vs";
+	std::string cyps_path = "cylinder.ps";
 
-	Shader cylinderShader(cyvs_path.c_str(), cyps_path.c_str());
+	//Shader cylinderShader(cyvs_path.c_str(), cyps_path.c_str());
 
 	Landscape landscape_obj(common::GetTexturePath("landscape/terrain_01.jpg"),
-		BDT::Size(50, 50), 50, common::GetShaderPath("cylinder.vs"),
-		common::GetShaderPath("cylinder.ps")
+		BDT::Size(50, 50), 50,cyvs_path,
+		cyps_path
 	);
 	landscape_obj.SetUp();
 
@@ -183,7 +183,7 @@ int main(int argc, char **argv)
 	LineVertices.push_back(BDT::LineVertex(glm::vec3(0, 0, 0), glm::vec3(0, 0, 255)));
 	LineVertices.push_back(BDT::LineVertex(glm::vec3(0, 0, 10), glm::vec3(0, 0, 255)));
 
-	Line CoordLines(LineVertices, common::GetShaderPath("line.vs"), common::GetShaderPath("default.ps"),
+	Line CoordLines(LineVertices, std::string("line.vs"), std::string("default.ps"),
 		GL_LINES);
 	CoordLines.SetUp();
 

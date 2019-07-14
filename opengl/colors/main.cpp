@@ -142,8 +142,8 @@ int main(int argc, char **argv)
     // Use shader class
 	std::string vs_path;
 	std::string ps_path;
-	common::GetShaderPath(vs_path, "3d.vs");
-	common::GetShaderPath(ps_path, "simple_color.ps");
+	vs_path = "3d.vs";
+	ps_path = "simple_color.ps";
     Shader outShader(vs_path.c_str(), ps_path.c_str());
     
     // create texures
@@ -304,8 +304,8 @@ int main(int argc, char **argv)
     
     std::string v_path;
     std::string p_path;
-    common::GetShaderPath(v_path, "lamp.vs");
-    common::GetShaderPath(p_path, "lamp.ps");
+    v_path = "lamp.vs";
+    p_path = "lamp.ps";
     Shader lamp_shader(v_path.c_str(), p_path.c_str());
 
 

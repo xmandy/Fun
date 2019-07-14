@@ -229,8 +229,8 @@ int main(int argc, char **argv)
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
 	glBindVertexArray(0);
 
-	std::string cyvs_path = common::GetShaderPath("cylinder.vs");
-	std::string cyps_path = common::GetShaderPath("cylinder.ps");
+	std::string cyvs_path = "cylinder.vs";
+	std::string cyps_path = "cylinder.ps";
 
 	Shader cylinderShader(cyvs_path.c_str(), cyps_path.c_str());
 	

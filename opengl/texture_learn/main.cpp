@@ -68,8 +68,8 @@ int main(int argc, char **argv)
     // Use shader class
 	std::string vs_path;
 	std::string ps_path;
-	common::GetShaderPath(vs_path, "3d.vs");
-	common::GetShaderPath(ps_path, "texture_learn.ps");
+	vs_path = "3d.vs";
+	ps_path = "texture_learn.ps";
     Shader outShader(vs_path.c_str(), ps_path.c_str());
     
     // create texures
