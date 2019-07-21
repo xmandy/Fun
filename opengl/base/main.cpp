@@ -120,10 +120,7 @@ int main(int argc, char **argv)
     glfwGetFramebufferSize(window, &width, &height);
     glViewport(0, 0, width, height);
     
-    // Use shader class
-    Shader BaseShader("base.vs", "base.ps");
-    
-    // create texures
+	// create texures
     int tWidth, tHeight;
     
     int texture_length = 2;
@@ -152,6 +149,7 @@ int main(int argc, char **argv)
     }
     
    
+	/********************Mesh And VAO Start**************************/
 	// Considering Face Curling
 	// Point From z positive to negative
 	// TopLeft, TopRight, Bottom Right, Bottom Left
@@ -215,6 +213,33 @@ int main(int argc, char **argv)
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     
     glBindVertexArray(0);
+	/********************Mesh And VAO End**************************/
+    // Use shader class
+    Shader BaseShader("base.vs", "base.ps");
+	Shader GreenShader("base.vs", "base_ubo.ps");
+    
+ 
+	/*************************UBO Start***********************************/
+	GLuint Ubo;
+	glGenBuffers(1, &Ubo);
+	glBindBuffer(GL_UNIFORM_BUFFER, Ubo);
+	// 1. allocate memory
+	glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), NULL, GL_STATIC_DRAW);
+	// bind to binding point 0
+	glBindBufferRange(GL_UNIFORM_BUFFER, 0, Ubo, 0, 2 * sizeof(glm::mat4));
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+	// Bind Shader's Uniform Block into the same binding point
+	GLuint uniformBlockIdx = glGetUniformBlockIndex(BaseShader.Program, "WorldMatrix");
+	glUniformBlockBinding(BaseShader.Program, uniformBlockIdx, 0);
+
+	uniformBlockIdx = glGetUniformBlockIndex(GreenShader.Program, "WorldMatrix");
+	glUniformBlockBinding(GreenShader.Program, uniformBlockIdx, 0);
+	
+	/*************************UBO End***********************************/
+
+	GLint BaseModelLoc = glGetUniformLocation(BaseShader.Program, "model");
+	GLint GreenModelLoc = glGetUniformLocation(GreenShader.Program, "model");
 
     glEnable(GL_DEPTH_TEST);
    
@@ -228,28 +253,33 @@ int main(int argc, char **argv)
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
-        // bind textures
         
-        BaseShader.Use();
-        
-		GLint modelLoc = glGetUniformLocation(BaseShader.Program, "model");
-		GLint viewLoc = glGetUniformLocation(BaseShader.Program, "view");
-		GLint projectLoc = glGetUniformLocation(BaseShader.Program, "projection");
-        glm::mat4 view;
-		view = camera.GetViewMatrix();
+		glm::mat4 view = camera.GetViewMatrix();
 		glm::mat4 projection = camera.GetProjectionMatrix();
 
-		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-		glUniformMatrix4fv(projectLoc, 1, GL_FALSE, glm::value_ptr(projection));
+		glBindBuffer(GL_UNIFORM_BUFFER, Ubo);
+		glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(view));
+		glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(projection));
+		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
 		
+		glBindVertexArray(VAO);
+
+        BaseShader.Use();
 		glm::mat4 model;
 		model = glm::rotate(model, (GLfloat)glfwGetTime()*0.5f, glm::vec3(0.5f, 1.0f, 1.0f));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-
-		glBindVertexArray(VAO);
-			
+		glUniformMatrix4fv(BaseModelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 		glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(GLuint), GL_UNSIGNED_INT, 0);
+
+		GreenShader.Use();
+		glm::mat4 GreenModel;
+		GreenModel= glm::translate(GreenModel, glm::vec3(0, 0.5, 0));
+		glUniformMatrix4fv(GreenModelLoc, 1, GL_FALSE, glm::value_ptr(GreenModel));
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+		glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(GLuint), GL_UNSIGNED_INT, 0);
+		
+
         glBindVertexArray(0);
         glfwSwapBuffers(window);
     }
