@@ -66,6 +66,8 @@ add_subdirectory(landscape)
 
 add_subdirectory(base)
 
+add_subdirectory(ssao)
+
 
 
 
