@@ -26,7 +26,7 @@ endif()
 
 if (WIN32)
     message(STATUS "Platform is win32")
-    set(BOOST_ROOT "E:/Documents/learn/BoostLib")
+    set(BOOST_ROOT "./BoostLib")
     set(Boost_USE_STATIC_LIBS ON)
     # set(Boost_COMPILER "-vc141")
 
@@ -76,5 +76,5 @@ message(STATUS "LibraryPath " ${Boost_LIBRARY_DIRS})
 include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 
-add_subdirectory(env_test)
+add_subdirectory(Projects/env_test)
 
