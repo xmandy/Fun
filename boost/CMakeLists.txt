@@ -26,7 +26,10 @@ endif()
 
 if (WIN32)
     message(STATUS "Platform is win32")
-    set(BOOST_ROOT "./BoostLib")
+	set(WORK_ROOT_PATH "E:/Documents/learn/Fun/boost")
+    set(BOOST_ROOT "${WORK_ROOT_PATH}/BoostLib")
+	#set(Boost_INCLUDE_DIR  "./BoostLib/include/boost-1_73")
+	#set(Boost_LIBRARY_DIR "./BoostLib/lib")
     set(Boost_USE_STATIC_LIBS ON)
     # set(Boost_COMPILER "-vc141")
 
